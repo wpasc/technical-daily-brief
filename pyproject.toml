@@ -1,0 +1,63 @@
+[project]
+name = "news-site"
+version = "0.1.0"
+description = "AI-generated news site with scraper, LLM writer, and React frontend"
+requires-python = ">=3.12"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+warn_redundant_casts = true
+warn_unused_ignores = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.black]
+line-length = 100
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+select = ["E", "F", "I", "N", "UP", "ANN", "S", "B", "A", "C4", "DTZ", "T10", "EM", "ISC", "ICN", "G", "PIE", "PT", "RET", "SIM", "TID", "ARG", "PTH", "PD", "PGH", "PL", "TRY", "NPY", "RUF"]
+ignore = ["ANN101", "ANN102", "ANN401", "S101", "PLR0913"]
+
+[tool.ruff.per-file-ignores]
+"tests/**/*.py" = ["S101", "ANN", "ARG"]
+"scripts/**/*.py" = ["T10"]
+
+[tool.coverage.run]
+source = ["backend", "scrapers", "story_writer"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false

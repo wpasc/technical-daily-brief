@@ -1,0 +1,25 @@
+database:
+  path: ./data/news.db
+
+scraper:
+  rate_limit_seconds: 2
+  sources:
+    - name: Reuters
+      rss_url: https://feeds.reuters.com/reuters/topNews
+    - name: AP News
+      rss_url: https://rsshub.app/apnews/topics/apf-topnews
+    - name: NPR
+      rss_url: https://feeds.npr.org/1001/rss.xml
+    - name: BBC World
+      rss_url: https://feeds.bbci.co.uk/news/world/rss.xml
+    - name: The Guardian
+      rss_url: https://www.theguardian.com/world/rss
+
+llm:
+  model: claude-sonnet-4-20250514
+  temperature: 0.7
+  max_tokens: 2000
+
+api:
+  host: 0.0.0.0
+  port: 8000
