@@ -45,3 +45,7 @@ logs/
 # Coverage
 .coverage
 htmlcov/
+
+# AI transient files (keep .ai/rules/ for config)
+.ai/checkpoints/
+.ai/a2a/
