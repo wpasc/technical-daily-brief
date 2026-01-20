@@ -1,32 +1,58 @@
 version: '3.8'
 
 services:
-  backend:
+  newssite_api:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
-      - ./backend:/app/backend
-      - ./scrapers:/app/scrapers
-      - ./story_writer:/app/story_writer
       - ./data:/app/data
     env_file: .env
     environment:
       - PYTHONPATH=/app/backend:/app
-    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    networks:
+      - web
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
-  frontend:
+  newssite_web:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+      args:
+        - REACT_APP_API_URL=/api
+    expose:
+      - "3000"
     depends_on:
-      - backend
+      - newssite_api
     environment:
-      - REACT_APP_API_URL=http://localhost:8000/api
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
+      - REACT_APP_API_URL=/api
+    networks:
+      - web
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+networks:
+  web:
+    external: true

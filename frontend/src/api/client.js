@@ -1,4 +1,7 @@
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+// In production (nginx proxy), use relative URL '/api'
+// In development, use REACT_APP_API_URL or fall back to localhost:8000
+const API_BASE = process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api');
 
 export async function fetchArticles() {
   try {

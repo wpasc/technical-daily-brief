@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import events_router, articles_router, health_router, writers_router
+from api.routers import events_router, articles_router, health_router, healthz_router, writers_router
 from core.database.session import init_db
 from core.logging_config import setup_logging
 
@@ -19,6 +19,8 @@ app = FastAPI(
 )
 
 # CORS middleware for frontend communication
+# In production with nginx proxy, requests come from same origin so CORS is less critical
+# but we keep localhost origins for local development
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -27,6 +29,7 @@ app.add_middleware(
         "http://localhost:5174",
         "http://localhost",
         "http://localhost:80",
+        "http://newssite_web:3000",  # Docker internal network
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -35,6 +38,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(health_router)
+app.include_router(healthz_router)  # Infrastructure health check at /healthz
 app.include_router(events_router)
 app.include_router(articles_router)
 app.include_router(writers_router)
