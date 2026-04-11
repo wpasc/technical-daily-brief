@@ -16,19 +16,11 @@ Create rule files in this directory for project-specific guidance that should on
 - `testing_rules.md` - Load when writing tests
 - `llm_integration.md` - Load when modifying story_writer or prompts
 
-## External Standards
+## Standards
 
-This project references standards from `cross_project_ai_resources`:
-
-```
-~/workspace/cross_project_ai_resources/agent_context/core/
-  - documentation_standards.md (ASCII-only, zero-context)
-  - testing_standards.md (80%+ coverage, AAA pattern)
-
-~/workspace/cross_project_ai_resources/agent_context/conditional/
-  - anti_patterns.md (load during code review)
-  - agent_handoff_standard.md (load for multi-agent workflows)
-```
+Standards for documentation, testing, code review, and anti-patterns are
+provisioned as skills in `.claude/skills/`. These are loaded automatically
+when relevant -- no external references needed.
 
 ## Directory Structure
 

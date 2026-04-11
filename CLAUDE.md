@@ -6,11 +6,39 @@ AI-generated news site with scraper, LLM writer, and React frontend.
 
 Tech Stack: Python 3.12, FastAPI, SQLAlchemy, SQLite, React, Claude API
 
-## External Standards
+## Project Documentation
 
-Reference: ~/workspace/cross_project_ai_resources/agent_context/core/
-- documentation_standards.md (ASCII-only, zero-context)
-- testing_standards.md (80%+ coverage, AAA pattern)
+@../project-docs/news-site/ACTIVE.md
+
+## Core Principles
+
+### Zero-Context Documentation
+All documentation assumes no prior project knowledge. Explain the "why" for every non-obvious choice.
+
+### Plain Documentation
+Prefer plain ASCII in documentation. Avoid decorative emoji.
+
+### Test Behavior, Not Implementation
+Test what code does, not how it does it. No mocking internals.
+
+### Simplicity Over Cleverness
+Boring, obvious code over clever abstractions. Wait for real needs.
+
+### Plan Before Executing
+For non-trivial work, prefer plan mode. Enter plan mode to align on approach before writing code. When exiting plan mode:
+- If there is an engaged task (`.claude/engaged-task` exists), save the plan as a new file in the task's folder (e.g., `plan-{description}.md` alongside the main `plan.md`).
+- If there is no engaged task, just exit normally.
+This creates durable plan artifacts that sub-agents can reference and that persist across sessions.
+
+## Testing
+
+```bash
+make test
+# or: cd backend && pytest tests/ -v
+```
+
+- Coverage targets: 80%+ for new modules, 90%+ for critical paths
+- Test paths: `backend/tests/`
 
 ## Key Patterns
 
