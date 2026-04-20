@@ -2,7 +2,6 @@
 name: checkpoint
 description: Create checkpoints and capture todos, routing to the project's documentation in project-docs
 ---
-<!-- repo-types: api-service, cli-tool, library, frontend-app, full-stack, documentation, notes, research, monorepo -->
 
 # Session Checkpoint
 
@@ -17,18 +16,18 @@ Every repo's CLAUDE.md references an ACTIVE.md in project-docs. That file tells 
 
 **Derive the project-docs path from the `@` reference in CLAUDE.md.** Do not hardcode paths.
 
-### Engaged Task
-
-If `.claude/engaged-task` exists, it contains the current task (line 1: name, line 2: relative path to task folder). Use this to route checkpoints without ambiguity when multiple tasks are active.
-
 ### Checkpoint Routing
+
+The session itself tells you where to write. The `engage` skill, if it fired earlier, already loaded a task's `plan.md` into context -- that's the strongest signal. Otherwise fall back to ACTIVE.md status hints, then ask.
 
 | Situation | Write to |
 |-----------|----------|
-| `.claude/engaged-task` exists | `{path-from-engaged-task}/status.md` (prepend, latest first) |
-| No engaged task but active task in ACTIVE.md | `{project-docs-folder}/tasks/{task}/status.md` (prepend, latest first) |
-| Multiple active tasks, no engaged task | Ask the user which task to checkpoint |
-| No active task | `{project-docs-folder}/tasks/status.md` (general project status) |
+| A task's `plan.md` is already in context this session (engage loaded it, or you opened the file directly while working) | That task's `status.md` (prepend, latest first) |
+| No task in context, but ACTIVE.md has exactly one `[in flight]` entry | That task's `status.md` (prepend, latest first) |
+| No task in context, multiple `[in flight]` entries in ACTIVE.md | Ask the user which task to checkpoint |
+| No active task at all | `{project-docs-folder}/tasks/status.md` (general project status) |
+
+If you write to a task's `status.md` and the corresponding ACTIVE.md entry's status hint no longer reflects reality (e.g., task was `[parked]` and you just resumed it), update the hint inline -- this keeps the catalog honest.
 
 ### Todo Routing
 
@@ -36,17 +35,21 @@ When the user says "add to todo", "put this on my list", or similar:
 
 | Todo is about | Write to |
 |---------------|----------|
-| The current project | `## Todo` section of this project's ACTIVE.md |
+| The current project | `TODO.md` in this project's project-docs folder (full description), then add a one-sentence handle under `## Todo` in ACTIVE.md |
 | Cross-project, general, or unclear | `~/workspace/nexus/todo.md` under `## General` |
 
 Use judgment: if the todo names a specific project or relates to the work at hand, it's project-specific. If it's about the workspace, tooling across repos, a general idea, or you're not sure, route to nexus.
+
+If a project does not yet have a `TODO.md` (the split is currently scoped to `cross_project_ai_resources`; other repos still keep todos inline in ACTIVE.md's `## Todo` section), write to whichever shape that project uses -- check ACTIVE.md and the presence of `TODO.md` to decide.
 
 ### Task Creation
 
 When the user says "start a task" or picks up a todo item to work on:
 1. Create `{project-docs-folder}/tasks/{task-name}/plan.md` with goal and steps
 2. Create `{project-docs-folder}/tasks/{task-name}/status.md` with initial entry
-3. Update ACTIVE.md: move item from Todo to Active Tasks with link to plan.md
+3. Update ACTIVE.md: add an Active Tasks entry with link to plan.md and the `[in flight]` status hint (where supported); remove the original Todo handle. If TODO.md exists, also remove the corresponding full-description entry there.
+
+This overlaps with the engage skill's golden path -- they should produce the same end state.
 
 ## Checkpoint Structure
 

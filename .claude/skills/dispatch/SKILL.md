@@ -8,7 +8,6 @@ description: >-
   DO NOT TRIGGER when: simple single-file changes, quick fixes with known
   solutions, or highly sequential chains where each step needs prior output.
 ---
-<!-- repo-types: api-service, cli-tool, library, frontend-app, full-stack, documentation, notes, research, monorepo -->
 
 # Prompt Dispatch Workflow
 
@@ -71,11 +70,13 @@ and keeps each validation context focused on one unit of work.
 
 ## Plan File Coordination
 
-If there is an engaged task (`.claude/engaged-task` exists), the dispatch
-workflow uses the task's plan file as an external coordination artifact:
+If a task's `plan.md` is already loaded into the session's context (the
+`engage` skill matched the user's prompt against ACTIVE.md and pulled the
+plan in, or the orchestrator was working from that plan when dispatch was
+invoked), the dispatch workflow uses it as an external coordination artifact:
 
-1. **Before decomposition:** Read the task's `plan.md` to inform sub-task
-   breakdown. The plan provides goals, approach, and step status.
+1. **Before decomposition:** The plan's Goal, Approach, and current step
+   status inform sub-task breakdown.
 2. **After execution:** Update the plan file with completed steps and any
    new information discovered during dispatch.
 3. **Sub-agent prompts:** Include relevant plan context so workers understand
@@ -84,7 +85,7 @@ workflow uses the task's plan file as an external coordination artifact:
 This means sub-agents coordinate through a shared, persistent artifact
 rather than relying solely on the orchestrator's context window.
 
-If no engaged task exists, dispatch operates standalone (no plan file).
+If no task plan is loaded, dispatch operates standalone (no plan file).
 
 ---
 
@@ -100,15 +101,14 @@ not read files, analyze code, or write code yourself. Offload ALL substantive
 work to sub-agents via the Task tool.
 
 
-## Phase 0: Load Plan Context (if engaged task exists)
+## Phase 0: Load Plan Context (if a task plan is in scope)
 
-If `.claude/engaged-task` exists:
-1. Read the task path (line 2 of the file)
-2. Read `{task-path}/plan.md`
-3. Include the plan's Goal, Approach, and current step status as context
-   for the decomposer in Phase 1
+If a task's `plan.md` is already loaded into context (the `engage` skill
+matched earlier in this session, or the user explicitly referenced a task
+folder), include the plan's Goal, Approach, and current step status as
+context for the decomposer in Phase 1.
 
-If no engaged task, skip to Phase 1.
+If no task plan is in scope, skip to Phase 1.
 
 
 ## Phase 1: Decompose
@@ -319,9 +319,9 @@ After all validators return, consolidate their results:
 4. Move to Phase 4
 
 
-## Phase 4: Update Plan (if engaged task exists)
+## Phase 4: Update Plan (if a task plan was loaded in Phase 0)
 
-If an engaged task was loaded in Phase 0:
+If a task's `plan.md` was loaded in Phase 0:
 1. Update `{task-path}/plan.md` -- mark completed steps, add new steps
    discovered during dispatch, note any decisions made
 2. Write a status entry to `{task-path}/status.md` summarizing what
