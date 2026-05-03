@@ -1,10 +1,30 @@
 ---
 name: agent-handoff
-description: Lightweight protocol for passing context between AI agents - JSON schema for cross-tool, cross-session, and audit-trail handoffs. Not needed for single-tool native coordination.
-user-invocable: false
+description: >-
+  Codex runtime skill generated from canonical `skills/agent-handoff/SKILL.md`. Lightweight protocol for passing context between AI agents - JSON schema for cross-tool, cross-session, and audit-trail handoffs.
 ---
 
-# Agent Handoff Standard
+# agent-handoff (Codex Runtime Skill)
+
+Canonical source: `skills/agent-handoff/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill + reinforce in AGENTS.md
+- Rationale: Still valuable as an explicit skill, but the core rule set also belongs in always-on Codex guidance.
+
+## Inlined Skill Body
+
+## Agent Handoff Standard
 
 Lightweight specification for passing context between AI agents.
 
@@ -22,7 +42,7 @@ Lightweight specification for passing context between AI agents.
 
 ---
 
-## Minimal Handoff
+### Minimal Handoff
 
 The simplest valid handoff:
 
@@ -43,7 +63,7 @@ The simplest valid handoff:
 
 **Required fields:** id, timestamp, source.agentType, status.state, task.type, task.summary
 
-## Task States
+### Task States
 
 ```
 submitted -> working -> completed
@@ -51,7 +71,7 @@ submitted -> working -> completed
                     \-> input_required
 ```
 
-## Agent Types
+### Agent Types
 
 | Type | Purpose |
 |------|---------|
@@ -65,7 +85,7 @@ submitted -> working -> completed
 | `fixer` | Applies minimal interventions from audit findings |
 | `general` | Multi-purpose |
 
-## Task Types
+### Task Types
 
 | Type | Use For |
 |------|---------|
@@ -79,11 +99,11 @@ submitted -> working -> completed
 | `fix` | Apply minimal intervention from audit finding |
 | `general` | Everything else |
 
-## Optional Fields
+### Optional Fields
 
 Add when they provide value: `task.instructions`, `task.constraints`, `task.acceptance_criteria`, `context.files`, `context.decisions`, `context.assumptions`, `artifacts`, `metadata.priority`, `metadata.tags`.
 
-## Guidelines
+### Guidelines
 
 **DO:** Generate UUIDs for id, include only context the next agent needs, keep handoffs focused on one task.
 

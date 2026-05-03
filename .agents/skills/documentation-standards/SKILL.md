@@ -1,18 +1,38 @@
 ---
 name: documentation-standards
-description: Documentation principles -- zero-context writing, declared intent, README placement stack, self-evident navigation, currency maintenance, and anti-patterns
-user-invocable: false
+description: >-
+  Codex runtime skill generated from canonical `skills/documentation-standards/SKILL.md`. Documentation principles -- zero-context writing, declared intent, README placement stack, self-evident navigation, currency maintenance, and anti-patterns
 ---
 
-# Documentation Standards
+# documentation-standards (Codex Runtime Skill)
+
+Canonical source: `skills/documentation-standards/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill + reinforce in AGENTS.md
+- Rationale: Still valuable as an explicit skill, but the core rule set also belongs in always-on Codex guidance.
+
+## Inlined Skill Body
+
+## Documentation Standards
 
 Comprehensive guide to writing clear, complete documentation that any reader - human or AI - can understand with zero prior context.
 
 ---
 
-## Core Philosophy
+### Core Philosophy
 
-### Zero-Context Principle
+#### Zero-Context Principle
 
 Every piece of documentation should be written assuming the reader has:
 
@@ -31,7 +51,7 @@ Every piece of documentation should be written assuming the reader has:
 - Future maintainers understand the codebase
 - Documentation ages well
 
-### Documentation as Declared Intent
+#### Documentation as Declared Intent
 
 Documentation is not decoration or commentary. It is the **authoritative statement of what the project is supposed to be**. Code is observable reality. When code and docs diverge, that gap is a drift signal that needs resolving -- not a sign that "docs are out of date and the code is what really matters."
 
@@ -49,7 +69,7 @@ This is what makes documentation enforceable rather than aspirational. The
 audit-convergence workflow or command exists to surface exactly these drift
 signals.
 
-### Self-evident Navigation
+#### Self-evident Navigation
 
 A reader dropped anywhere in the repo should never feel lost. The hierarchy itself should make the next step obvious -- what this folder is, and where to go for the bigger picture or the next level of detail.
 
@@ -59,7 +79,7 @@ Cross-references between READMEs are fine when they add navigation value. Do not
 
 ---
 
-## README Files -- The Placement Stack
+### README Files -- The Placement Stack
 
 READMEs form a layered navigation stack. Not every folder gets one; placement is tiered.
 
@@ -79,13 +99,13 @@ READMEs form a layered navigation stack. Not every folder gets one; placement is
 
 Use judgment: a README should add value, not exist to check a box.
 
-### The README-as-Index Pattern
+#### The README-as-Index Pattern
 
 A good README does two things: it **describes its own scope**, and it **points to where the next level of detail lives**. At the root, that means pointing to major subsystems. Inside a module, it means pointing to the files or subfolders that carry the real implementation.
 
 This makes READMEs a navigation surface, not a wall of prose. A reader should land on any README and know two things within ten seconds: *what is this?* and *where do I go next?*
 
-### README Structure
+#### README Structure
 
 ```markdown
 # {Directory Name}
@@ -107,9 +127,9 @@ This makes READMEs a navigation surface, not a wall of prose. A reader should la
 
 ---
 
-## Writing Effective Documentation
+### Writing Effective Documentation
 
-### Use Concrete Examples
+#### Use Concrete Examples
 
 **Bad:**
 ```markdown
@@ -135,7 +155,7 @@ python manage.py migrate
 ```
 ```
 
-### Explain the "Why"
+#### Explain the "Why"
 
 **Bad:**
 ```markdown
@@ -153,15 +173,15 @@ Use the repository pattern for all database access.
 - **Consistency**: Same patterns across entire codebase
 ```
 
-### Show Good and Bad Examples
+#### Show Good and Bad Examples
 
 Always include both correct and incorrect examples so the reader understands the boundary.
 
-### Link Related Documentation
+#### Link Related Documentation
 
 Include file paths and cross-references to related docs.
 
-### Keep It Current
+#### Keep It Current
 
 Documentation that doesn't match reality is worse than no documentation. Stale docs corrupt the "declared intent" role they are supposed to play -- a reader can no longer tell which sources to trust.
 
@@ -173,7 +193,7 @@ Documentation that doesn't match reality is worse than no documentation. Stale d
 5. **Run the audit-convergence workflow periodically** -- surfaces drift between
    declared intent and observable code before it accumulates
 
-### Change Precedence when Docs and Code Disagree
+#### Change Precedence when Docs and Code Disagree
 
 When docs and code diverge, prefer fixes in this order:
 
@@ -186,7 +206,7 @@ This is not "always change the docs first." It is a **precedence** for when eith
 
 ---
 
-## Character Encoding Preference
+### Character Encoding Preference
 
 Prefer plain ASCII in documentation for simplicity and compatibility. This is a soft preference, not a hard rule.
 
@@ -196,7 +216,7 @@ Prefer plain ASCII in documentation for simplicity and compatibility. This is a 
 
 ---
 
-## Diagrams: Use Mermaid
+### Diagrams: Use Mermaid
 
 For visual diagrams, use Mermaid. Mermaid is text-defined and LLM-readable in source form, but renders as rich visuals in GitHub, VS Code, and most markdown viewers.
 
@@ -206,27 +226,27 @@ For visual diagrams, use Mermaid. Mermaid is text-defined and LLM-readable in so
 
 ---
 
-## Documentation Anti-Patterns
+### Documentation Anti-Patterns
 
-### 1. The Vague Description
+#### 1. The Vague Description
 
 **Bad:** "This module handles user stuff."
 
 **Good:** "This module provides user authentication and authorization: JWT token generation and validation, password hashing with bcrypt, role-based access control, session management."
 
-### 2. The Assumed Context
+#### 2. The Assumed Context
 
 **Bad:** "As discussed in the meeting, we're using the new approach."
 
 **Good:** "We're using JWT tokens instead of sessions for authentication. **Rationale:** Sessions don't scale horizontally."
 
-### 3. The Reference to Ephemeral Knowledge
+#### 3. The Reference to Ephemeral Knowledge
 
 **Bad:** "Ask Bob about the deployment process."
 
 **Good:** Document the deployment process directly with concrete steps.
 
-### 4. The Over-Technical Explanation
+#### 4. The Over-Technical Explanation
 
 **Bad:** Dumping architectural jargon without explanation.
 
@@ -234,7 +254,7 @@ For visual diagrams, use Mermaid. Mermaid is text-defined and LLM-readable in so
 
 ---
 
-## Summary
+### Summary
 
 **Key Principles:**
 - **Zero-context** -- Assume nothing about the reader

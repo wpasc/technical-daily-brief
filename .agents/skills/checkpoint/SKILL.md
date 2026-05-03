@@ -1,27 +1,40 @@
 ---
 name: checkpoint
 description: >-
-  Capture session context, todos, and working-repo git state, routing notes to
-  the project's documentation in project-docs and surfacing any uncommitted
-  changes for the user to stage or commit.
-  TRIGGER when: the user signals a pause or context switch ("stepping away",
-  "wrap this up", "switching to X", "let's come back to this"); a multi-step
-  task reaches a natural stopping point worth preserving; substantive work has
-  produced uncommitted changes the user should review before moving on; the
-  user explicitly says "checkpoint" or "save state".
-  DO NOT TRIGGER when: a single trivial edit just landed; the session has been
-  pure Q&A with no state to preserve; mid-iteration with unstable in-progress
-  changes the user is still actively shaping; a task is already mid-flight and
-  the user is continuing the same line of work.
+  Codex runtime skill generated from canonical `skills/checkpoint/SKILL.md`. Capture session context, todos, and working-repo git state, routing notes to the project's documentation in project-docs and surfacing any uncommitted changes for the user to stage or commit.
 ---
 
-# Session Checkpoint
+# checkpoint (Codex Runtime Skill)
+
+Canonical source: `skills/checkpoint/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill
+- Rationale: Workflow or reference guidance is useful in Codex as a self-contained runtime skill.
+
+## Skill-Specific Notes
+
+- For project-docs routing, derive paths from `AGENTS.md` external-context entries first; use `CLAUDE.md` only as supplemental fallback when older Claude-only `@` import wording is the only available routing source.
+
+## Inlined Skill Body
+
+## Session Checkpoint
 
 Capture session context and todos, routing them to the project's documentation
 folder in project-docs. Use the project's root AI guidance and loaded
 external-context references to find ACTIVE.md and the project-docs folder.
 
-## Routing
+### Routing
 
 Project-docs routing is declared by the repo's AI guidance files or by context
 already loaded at session start. Read guidance in harness priority order (for
@@ -37,7 +50,7 @@ ACTIVE.md tells you:
 **Derive the project-docs path from loaded context or guidance references.** Do
 not hardcode paths.
 
-### Checkpoint Routing
+#### Checkpoint Routing
 
 The session itself tells you where to write. The `engage` skill, if it fired earlier, already loaded a task's `plan.md` into context -- that's the strongest signal. Otherwise fall back to ACTIVE.md status hints, then ask.
 
@@ -50,7 +63,7 @@ The session itself tells you where to write. The `engage` skill, if it fired ear
 
 If you write to a task's `status.md` and the corresponding ACTIVE.md entry's status hint no longer reflects reality (e.g., task was `[parked]` and you just resumed it), update the hint inline -- this keeps the catalog honest.
 
-### Todo Routing
+#### Todo Routing
 
 When the user says "add to todo", "put this on my list", or similar:
 
@@ -63,7 +76,7 @@ Use judgment: if the todo names a specific project or relates to the work at han
 
 If a project does not yet have a `TODO.md` (the split is currently scoped to `cross_project_ai_resources`; other repos still keep todos inline in ACTIVE.md's `## Todo` section), write to whichever shape that project uses -- check ACTIVE.md and the presence of `TODO.md` to decide.
 
-### Task Creation
+#### Task Creation
 
 When the user says "start a task" or picks up a todo item to work on:
 1. Create `{project-docs-folder}/tasks/{task-name}/plan.md` with goal and steps
@@ -72,9 +85,9 @@ When the user says "start a task" or picks up a todo item to work on:
 
 This overlaps with the engage skill's golden path -- they should produce the same end state.
 
-## Checkpoint Structure
+### Checkpoint Structure
 
-### Required Sections
+#### Required Sections
 
 **1. Summary** - Brief description of work completed. Focus on what was accomplished, key changes, and important context. Keep concise but complete.
 
@@ -84,11 +97,11 @@ This overlaps with the engage skill's golden path -- they should produce the sam
 - Any blockers or issues discovered
 - Relevant file paths
 
-### Conditional Section
+#### Conditional Section
 
 **3. Next Steps** - Include ONLY when there are specific follow-up actions. Actionable items, not vague suggestions. Omit if work is complete.
 
-## Status File Format
+### Status File Format
 
 New entries go at the top of status.md:
 
@@ -98,7 +111,7 @@ New entries go at the top of status.md:
 {Summary of what was done, where things stand, what's next.}
 ```
 
-## Working-Repo Git State
+### Working-Repo Git State
 
 Before writing the project-docs entry, check the working repo for uncommitted state:
 
@@ -116,7 +129,7 @@ This keeps the harness default ("commit only when asked") intact while making su
 
 Project-docs writes (per the Routing section above) are separate from working-repo commits and follow the 2026-04-09 standing authorization to commit project-docs changes proactively.
 
-## When to Checkpoint
+### When to Checkpoint
 
 | Scenario | Checkpoint |
 |----------|-----------|
@@ -125,7 +138,7 @@ Project-docs writes (per the Routing section above) are separate from working-re
 | Important decisions made that need documentation | Yes |
 | Simple completed task with no follow-up | No |
 
-## Guidelines
+### Guidelines
 
 **Do:**
 - Keep summaries focused on essential context
@@ -139,7 +152,7 @@ Project-docs writes (per the Routing section above) are separate from working-re
 - Create checkpoints for trivial changes
 - Include implementation details clear from the code
 
-## Task Completion
+### Task Completion
 
 When a task is done:
 1. Add a final status entry to `tasks/{task}/status.md`

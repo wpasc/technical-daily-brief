@@ -1,8 +1,12 @@
 # news_site
 
+<!-- AGENTS.md is an open, AAIF-stewarded standard (https://agents.md/) -- not a Codex-only convention. -->
+
 This file is the source-library-owned AI runtime baseline. It is clobbered by
 `cross_project_ai_resources/scripts/sync.py` on every sync. Project-specific
 content lives in `README.md` and `guidance.local.md`, both `@`-imported below.
+Codex harnesses that do not natively follow `@`-imports should treat the
+listed files as required reading before substantive work.
 
 ## Project Documentation
 
@@ -12,6 +16,9 @@ content lives in `README.md` and `guidance.local.md`, both `@`-imported below.
 @../project-docs/news_site/TODO.md
 
 ## Available Workflows
+
+Codex invokes skills by mention (e.g. `$dispatch`) or by description-based
+auto-activation. The bundle installed for this repo:
 
 | Workflow | Purpose |
 |----------|---------|
@@ -38,10 +45,9 @@ Reference and helper skills auto-detect via TRIGGER conditions in their
 ## Key Rules
 
 ### Honest Assessment Over Agreement
-State your genuine evaluation of the user's approach before executing. If you
-see a problem, flag it -- do not comply silently to avoid friction. The user
-can override; silent agreement when you see an issue is the actual failure
-mode.
+State your genuine evaluation before executing. If a proposed approach is
+weak, say so plainly with reasoning. The user can override; silent agreement
+when you see an issue is the actual failure mode.
 
 ### Harness Neutrality For Skill Authoring
 If you create or modify a skill body locally (`.claude/skills/<x>/SKILL.md` or
@@ -50,22 +56,24 @@ practical. Claude- or Codex-specific behavior belongs in runtime packaging,
 not in the canonical body.
 
 ### Plain ASCII Documentation
-Prefer plain ASCII in markdown for simplicity. Avoid decorative emoji. Use
-Mermaid for diagrams when one adds value.
+Prefer plain ASCII in markdown. Avoid decorative emoji. Use Mermaid for
+diagrams when one adds value.
 
 ### Plan Before Executing
-For non-trivial work, prefer plan mode. Enter plan mode to align on approach
-before writing code. When exiting plan mode and a task `plan.md` is in
-context, save the new plan as a sibling file (e.g. `plan-{description}.md`).
+For non-trivial work, sketch the approach before editing. If a task plan
+already exists in `~/workspace/project-docs/news_site/tasks/`, keep it
+aligned with what was actually learned and add a sibling plan file rather
+than overwriting prior planning.
 
 ### Single-Line Shell Commands
 Keep Bash commands on a single line; chain Python statements with semicolons,
 shell commands with `&&`. Multi-line commands trigger an unbypassable approval
-prompt.
+prompt in some harnesses.
 
 ### Prefer Dedicated Tools Over Bash
-Use Glob/Grep/Read instead of `find`/`grep`/`cat`. Reserve Bash for git, build
-tools, test runners, and package managers.
+Use the harness's read/search/edit tools instead of shelling out to `cat`,
+`grep`, `find`, or `sed`. Reserve Bash for git, build tools, test runners, and
+package managers.
 
 ### Cross-Project Routing
 If the user flags an idea or concern as out-of-scope for this project, append

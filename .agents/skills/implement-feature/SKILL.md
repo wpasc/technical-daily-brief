@@ -1,21 +1,40 @@
 ---
 name: implement-feature
 description: >-
-  Multi-agent workflow for implementing new features through sequential scout,
-  dialogue, context-gathering, implementation, and review phases.
-  TRIGGER when: user requests a substantial new feature requiring codebase
-  understanding, user clarification, and structured implementation with review.
-  DO NOT TRIGGER when: quick bug fixes, documentation-only changes, simple
-  refactors with known solutions, or single-file changes.
+  Codex runtime skill generated from canonical `skills/implement-feature/SKILL.md`. Multi-agent workflow for implementing new features through sequential scout, dialogue, context-gathering, implementation, and review phases.
 ---
 
-# Feature Implementation Workflow
+# implement-feature (Codex Runtime Skill)
+
+Canonical source: `skills/implement-feature/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill
+- Rationale: Workflow or reference guidance is useful in Codex as a self-contained runtime skill.
+
+## Skill-Specific Notes
+
+- Prefer modern Codex planning, subagent, and verification patterns while preserving the source phase structure. Use `explorer`, `worker`, or `default` roles in prose, not fake invocation syntax.
+
+## Inlined Skill Body
+
+## Feature Implementation Workflow
 
 Multi-agent workflow for implementing new features through collaborative agent handoffs.
 
 ---
 
-## Purpose
+### Purpose
 
 - Systematically implement features from discovery through validated code
 - Ensure thorough understanding of codebase before implementation
@@ -25,7 +44,7 @@ Multi-agent workflow for implementing new features through collaborative agent h
 
 ---
 
-## When to Use
+### When to Use
 
 | Scenario | Use This Workflow |
 |----------|-------------------|
@@ -37,7 +56,7 @@ Multi-agent workflow for implementing new features through collaborative agent h
 
 ---
 
-## Workflow Overview
+### Workflow Overview
 
 ```
 [Repository Scout] --> [Feature Dialoguer] --> [Context Gatherer]
@@ -57,7 +76,7 @@ Multi-agent workflow for implementing new features through collaborative agent h
 
 ---
 
-## Agent Definitions
+### Agent Definitions
 
 | Agent | Type | Purpose |
 |-------|------|---------|
@@ -69,7 +88,7 @@ Multi-agent workflow for implementing new features through collaborative agent h
 
 ---
 
-## Prompt
+### Prompt
 
 ```
 You are orchestrating a multi-agent feature implementation workflow.
@@ -462,7 +481,7 @@ Workflow is successful when:
 
 ---
 
-## Usage Example
+### Usage Example
 
 **Initial Prompt to Start Workflow:**
 
@@ -481,7 +500,7 @@ implementation workflow to guide this process.
 
 ---
 
-## Comparison with Prompt Dispatch Workflow
+### Comparison with Prompt Dispatch Workflow
 
 | Aspect | Feature Implementation | Prompt Dispatch |
 |--------|----------------------|-----------------|
@@ -494,13 +513,13 @@ implementation workflow to guide this process.
 
 ---
 
-## Integration Notes
+### Integration Notes
 
-**Claude Code adapter (Agent tool):**
-- Scout/Gatherer: `Agent(subagent_type="Explore", prompt=...)`
-- Dialoguer: Direct interaction in main context (needs user input)
-- Implementer: `Agent(subagent_type="general-purpose", prompt=...)`
-- Reviewer: `Agent(subagent_type="general-purpose", prompt=...)`
+**Codex subagent guidance:**
+- Scout/Gatherer: use `explorer` subagents for bounded read-only codebase questions when they can run in parallel with local work.
+- Dialogue Owner: keep the main Codex agent responsible for user-facing synthesis and decisions.
+- Implementer: use `worker` or `default` subagents only for scoped implementation slices with explicit file ownership.
+- Reviewer: use `explorer` or `default` subagents for independent review when useful, then verify their findings against the actual diff.
 
 **Other LLM tools and harnesses:**
 - The phase instructions are self-contained prompts

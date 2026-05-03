@@ -1,28 +1,38 @@
 ---
 name: testing-standards
 description: >-
-  Principles for writing tests that catch bugs and survive refactoring --
-  behavioral testing, mocking boundaries, test isolation, coverage targets,
-  and realistic-scale fixtures for bulk-I/O and storage code.
-  TRIGGER when: writing or reviewing tests; designing a test fixture;
-  writing tests for code that handles bulk I/O, columnar storage,
-  partitioned files, scheduled jobs, or any operation whose memory or
-  runtime scales with input size.
-  DO NOT TRIGGER when: running existing tests, writing application code
-  without test concerns, or debugging a test failure (use
-  systematic-debugging).
-user-invocable: false
+  Codex runtime skill generated from canonical `skills/testing-standards/SKILL.md`. Principles for writing tests that catch bugs and survive refactoring -- behavioral testing, mocking boundaries, test isolation, coverage targets, and realistic-scale fixtures for bulk-I/O and storage code.
 ---
 
-# Testing Standards
+# testing-standards (Codex Runtime Skill)
+
+Canonical source: `skills/testing-standards/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill + reinforce in AGENTS.md
+- Rationale: Still valuable as an explicit skill, but the core rule set also belongs in always-on Codex guidance.
+
+## Inlined Skill Body
+
+## Testing Standards
 
 Principles for writing tests that catch bugs and survive refactoring.
 
 ---
 
-## Core Principles
+### Core Principles
 
-### 1. Test Behavior, Not Implementation
+#### 1. Test Behavior, Not Implementation
 
 Tests should verify *what* code does, not *how* it does it. If you refactor internals without changing behavior, tests should still pass.
 
@@ -46,7 +56,7 @@ def test_user_repository_calls_sqlalchemy_query():
     mock_db.query.assert_called_once()  # Breaks on any refactor
 ```
 
-### 2. Mock Only at System Boundaries
+#### 2. Mock Only at System Boundaries
 
 Mock external dependencies. Use real code for everything else.
 
@@ -62,7 +72,7 @@ Mock external dependencies. Use real code for everything else.
 
 Over-mocking is a smell. If you're mocking your own code, you're probably testing implementation.
 
-### 3. Tests Must Be Independent
+#### 3. Tests Must Be Independent
 
 Each test should:
 - Create its own test data
@@ -70,7 +80,7 @@ Each test should:
 - Not share mutable state
 - Produce the same result regardless of run order
 
-### 4. Tests Must Be Deterministic
+#### 4. Tests Must Be Deterministic
 
 No flaky tests. If a test sometimes passes and sometimes fails, fix it or delete it. Common causes:
 - Time-dependent logic
@@ -78,7 +88,7 @@ No flaky tests. If a test sometimes passes and sometimes fails, fix it or delete
 - Race conditions
 - External service dependencies
 
-### 5. Include Integration Tests
+#### 5. Include Integration Tests
 
 Unit tests alone miss integration bugs. Your test suite needs both:
 
@@ -93,7 +103,7 @@ tests/
   integration/    # Components together
 ```
 
-### 6. Realistic-Scale Tests for Bulk-I/O Code
+#### 6. Realistic-Scale Tests for Bulk-I/O Code
 
 Unit tests on 3-row fixtures miss quadratic-memory bugs. Any code that
 writes to a columnar format, manages partitioned files, handles bulk I/O,
@@ -135,9 +145,9 @@ Tests for partition writers must assert exact output file counts per run.
 
 ---
 
-## Guidelines (Not Rules)
+### Guidelines (Not Rules)
 
-### Test Names Should Be Descriptive
+#### Test Names Should Be Descriptive
 
 A reader should understand what's being tested without reading the implementation.
 
@@ -153,17 +163,17 @@ def test_user()
 def test_error_case()
 ```
 
-### Arrange-Act-Assert Is Usually Helpful
+#### Arrange-Act-Assert Is Usually Helpful
 
 Most tests read better with clear setup, action, and verification phases. But don't force it if it doesn't fit.
 
-### Keep Test Setup DRY But Explicit
+#### Keep Test Setup DRY But Explicit
 
 Repeated setup code makes tests hard to maintain. Fixtures, factories, and helper functions are all valid approaches. Choose based on readability, not dogma.
 
 ---
 
-## What to Test
+### What to Test
 
 **Focus on:**
 - Business logic and domain rules
@@ -179,7 +189,7 @@ Repeated setup code makes tests hard to maintain. Fixtures, factories, and helpe
 
 ---
 
-## Coverage Targets
+### Coverage Targets
 
 - 80%+ test coverage for new modules
 - 90%+ test coverage for critical paths
@@ -187,7 +197,7 @@ Repeated setup code makes tests hard to maintain. Fixtures, factories, and helpe
 
 ---
 
-## Summary
+### Summary
 
 - **Test behavior** - not implementation details
 - **Mock boundaries** - external services only

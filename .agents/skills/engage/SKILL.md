@@ -1,31 +1,45 @@
 ---
 name: engage
 description: >-
-  Adaptive task-context router. After root AI guidance and project task context
-  load, evaluate the user's first work-style prompt and either pull up relevant
-  prior context for a matched task, propose promoting a Todo into active work,
-  or route net-new work onto the golden-path filing flow.
-  TRIGGER when: a session opens with a vague work prompt ("what's the latest",
-  "where did we leave off"), OR a prompt names or describes work that may match
-  an entry in ACTIVE.md, OR a prompt describes substantive new work that should
-  be filed rather than handled ad-hoc.
-  DO NOT TRIGGER when: the prompt is a one-off question, a slash command, a
-  quick fix with obvious scope, or the session is already deep in a task and
-  the user is continuing that line of work.
+  Codex runtime skill generated from canonical `skills/engage/SKILL.md`. Adaptive task-context router.
 ---
 
-# Engage
+# engage (Codex Runtime Skill)
+
+Canonical source: `skills/engage/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill
+- Rationale: Workflow or reference guidance is useful in Codex as a self-contained runtime skill.
+
+## Skill-Specific Notes
+
+- For project-docs routing, derive paths from `AGENTS.md` external-context entries first; use `CLAUDE.md` only as supplemental fallback when older Claude-only `@` import wording is the only available routing source.
+
+## Inlined Skill Body
+
+## Engage
 
 Pulls up the right prior context at the start of substantive work, or routes
 net-new work onto the project's task-filing golden path. The matching
 intelligence lives in this skill and runs against ACTIVE.md/TODO.md discovered
 from loaded context or root AI guidance.
 
-## Purpose
+### Purpose
 
 A real complaint this skill addresses: at session start the model doesn't reliably pull up relevant prior work, so the user has to re-orient the conversation by hand. Engage makes that re-orientation an explicit, instructed behavior. It also gives ad-hoc "let me just start working on X" prompts a path onto the project's task-tracking conventions instead of letting them drift untracked.
 
-## Routing
+### Routing
 
 ACTIVE.md is the lightweight catalog; TODO.md is the long-form companion. They
 may already be loaded via the repo's root AI guidance; if not, read guidance in
@@ -43,7 +57,7 @@ Status hints inside `[]` weight matching: `[in flight]` is the strongest match c
 
 Match the user's prompt against ACTIVE.md (Active Tasks first, then Todo handles) and TODO.md, then pick one branch:
 
-### Branch 1: Match in Active Tasks
+#### Branch 1: Match in Active Tasks
 
 Prompt names or clearly describes an entry in `## Active Tasks`.
 
@@ -53,7 +67,7 @@ Prompt names or clearly describes an entry in `## Active Tasks`.
 
 Do not dump the full plan into the response -- the model now has it in context, that is enough.
 
-### Branch 2: Match in Todo
+#### Branch 2: Match in Todo
 
 Prompt names or clearly describes an entry in TODO.md (or its handle in ACTIVE.md's `## Todo`).
 
@@ -62,7 +76,7 @@ Prompt names or clearly describes an entry in TODO.md (or its handle in ACTIVE.m
 3. If yes: file as new active task (golden path below) and proceed; remove the entry from TODO.md and from ACTIVE.md's Todo handles
 4. If no: answer the prompt without filing anything
 
-### Branch 3: Net-new substantive work
+#### Branch 3: Net-new substantive work
 
 Prompt describes work that doesn't match any ACTIVE.md entry but sounds like it deserves to be tracked (a multi-step implementation, an exploration with deliverables, a bug needing investigation across multiple touchpoints, a design decision with downstream impact).
 
@@ -70,13 +84,13 @@ Prompt describes work that doesn't match any ACTIVE.md entry but sounds like it 
 2. If yes: golden path below
 3. If no: proceed without filing, but offer once at the end of the session to capture what was done
 
-### Branch 4: One-off prompt
+#### Branch 4: One-off prompt
 
 Prompt is a question, a quick fix, a tool/command request, or otherwise doesn't merit task ceremony. Do not engage. Proceed normally.
 
 This is the default when uncertain. Engage adds value when there is real prior context to pull or real new work to file -- it should not be a tax on every session.
 
-## New-Task Golden Path
+### New-Task Golden Path
 
 When filing net-new work or promoting a Todo:
 
@@ -89,7 +103,7 @@ When filing net-new work or promoting a Todo:
 Derive `{project-docs-folder}` from loaded context or root AI guidance
 references -- do not hardcode paths.
 
-## Output Format
+### Output Format
 
 Keep the orient short and scannable. The user wants to start working, not read a status report.
 
@@ -102,7 +116,7 @@ Next: {one line if known, omit if not}
 
 Then move into the user's prompt.
 
-## Status Hint Conventions
+### Status Hint Conventions
 
 Status hints inside `[]` on each Active Tasks entry:
 
@@ -114,11 +128,11 @@ Status hints inside `[]` on each Active Tasks entry:
 
 Maintain these by hand or via checkpoint when it writes to a task's `status.md`. Treat absence of a hint as `[in flight]` for matching purposes (legacy entries).
 
-## Notes
+### Notes
 
 - Engage is reactive to the user's prompt -- it does not fire blindly at session start. If the user's first message is "how does X work" or a one-off command, do nothing.
 - If ACTIVE.md and TODO.md are both empty, and the prompt is net-new substantive work, the golden path is the only useful response.
-- Legacy Claude note: this skill replaces the older `/engage` command and the
-  `.claude/engaged-task` state file. There is no sticky session-state file
+- Legacy Claude note: this skill replaces the older legacy Claude engage command and the
+  legacy Claude engaged-task state file. There is no sticky session-state file
   anymore -- the matching happens fresh against ACTIVE.md each time.
 - Pairs with `checkpoint`: where engage loads context for a task, checkpoint writes status back. Together they form the loop that keeps ACTIVE.md and the per-task `plan.md` / `status.md` files in sync without manual ceremony.

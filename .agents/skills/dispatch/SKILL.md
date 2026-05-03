@@ -1,15 +1,34 @@
 ---
 name: dispatch
 description: >-
-  Decompose complex prompts into parallel workers or sub-agents with validation.
-  TRIGGER when: request involves multiple separable concerns, touches multiple
-  files or systems, combines research with implementation, or session context
-  is at risk from long-running work.
-  DO NOT TRIGGER when: simple single-file changes, quick fixes with known
-  solutions, or highly sequential chains where each step needs prior output.
+  Codex runtime skill generated from canonical `skills/dispatch/SKILL.md`. Decompose complex prompts into parallel workers or sub-agents with validation.
 ---
 
-# Prompt Dispatch Workflow
+# dispatch (Codex Runtime Skill)
+
+Canonical source: `skills/dispatch/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill
+- Rationale: Workflow or reference guidance is useful in Codex as a self-contained runtime skill.
+
+## Skill-Specific Notes
+
+- Use Codex subagents when available: `explorer` for bounded read-only codebase questions, `worker` for scoped implementation with clear ownership, and `default` for general decomposition or review. If subagents are unavailable, keep the same decomposition local and validate each step before integrating.
+
+## Inlined Skill Body
+
+## Prompt Dispatch Workflow
 
 Generic multi-worker workflow that decomposes any prompt into parallel
 sub-tasks, executes them via independent workers or sub-agents, validates all
@@ -18,7 +37,7 @@ agent's context window lean.
 
 ---
 
-## Purpose
+### Purpose
 
 - Execute complex prompts by decomposing them into independent sub-tasks
 - Run workers in parallel where tasks are independent
@@ -29,7 +48,7 @@ agent's context window lean.
 
 ---
 
-## When to Use
+### When to Use
 
 | Scenario | Use This Workflow |
 |----------|-------------------|
@@ -42,7 +61,7 @@ agent's context window lean.
 
 ---
 
-## Workflow Overview
+### Workflow Overview
 
 ```
 [User Prompt]
@@ -69,7 +88,7 @@ and keeps each validation context focused on one unit of work.
 
 ---
 
-## Plan File Coordination
+### Plan File Coordination
 
 If a task's `plan.md` is already loaded into the session's context (the
 `engage` skill matched the user's prompt against ACTIVE.md and pulled the
@@ -90,7 +109,7 @@ If no task plan is loaded, dispatch operates standalone (no plan file).
 
 ---
 
-## Prompt
+### Prompt
 
 ```
 You are orchestrating a prompt dispatch workflow. You received a user prompt
@@ -127,7 +146,7 @@ You are a task decomposition specialist. You receive a user prompt and
 repository context. Your job is to break the prompt into independent,
 parallelizable sub-tasks that can be executed by separate workers.
 
-## Steps
+### Steps
 
 1. **Scan the environment:**
    - Use available search and file-listing tools to understand the directory structure
@@ -162,7 +181,7 @@ parallelizable sub-tasks that can be executed by separate workers.
    - What should the validator check to confirm the original prompt was met?
    - Map criteria back to the user's stated intent
 
-## Output
+### Output
 
 Return ONLY this JSON (no other text):
 
@@ -185,7 +204,7 @@ Return ONLY this JSON (no other text):
   ]
 }
 
-## Rules
+### Rules
 
 - Maximum 5 sub-tasks. Merge related work to stay under this limit.
 - If the prompt is simple enough for 1 agent, return 1 sub-task.
@@ -263,7 +282,7 @@ a single sub-task definition, and results from one worker. Your
 job is to verify that this worker's output correctly and completely
 addresses its assigned sub-task.
 
-## Validation Steps
+### Validation Steps
 
 1. **Completeness Check:**
    - Did this worker fully address its assigned sub-task?
@@ -285,7 +304,7 @@ addresses its assigned sub-task.
    - For each validation criterion relevant to this sub-task, state whether
      it was met and cite evidence
 
-## Output
+### Output
 
 Return ONLY this JSON (no other text):
 
@@ -344,18 +363,18 @@ structure. Adapt the detail level to the result.
 ### If PASS:
 
 ```
-## Dispatch Complete -- PASS
+### Dispatch Complete -- PASS
 
 **Request:** [prompt summary]
 
-### Work Completed
+#### Work Completed
 - [Task 1 title]: [1-line summary]
 - [Task 2 title]: [1-line summary]
 
-### Validation
+#### Validation
 All criteria met. [any notable observations]
 
-### Files Changed
+#### Files Changed
 - path/to/file1 (created | modified)
 - path/to/file2 (created | modified)
 ```
@@ -363,42 +382,42 @@ All criteria met. [any notable observations]
 ### If PARTIAL:
 
 ```
-## Dispatch Complete -- PARTIAL
+### Dispatch Complete -- PARTIAL
 
 **Request:** [prompt summary]
 
-### Work Completed
+#### Work Completed
 - [Task 1 title]: PASS - [summary]
 - [Task 2 title]: NEEDS REVISION - [summary + issue]
 
-### Issues
+#### Issues
 - [issue 1 with recommendation]
 
-### Validation
+#### Validation
 [overall assessment, gaps identified]
 
-### Files Changed
+#### Files Changed
 - path/to/file1 (created | modified)
 
-### Recommended Next Steps
+#### Recommended Next Steps
 - [what user should do to address gaps]
 ```
 
 ### If FAIL:
 
 ```
-## Dispatch Complete -- FAIL
+### Dispatch Complete -- FAIL
 
 **Request:** [prompt summary]
 
-### Issues
+#### Issues
 - [issue 1]
 - [issue 2]
 
-### What Was Attempted
+#### What Was Attempted
 - [Task 1 title]: [what happened]
 
-### Recommendations
+#### Recommendations
 - [what to try next]
 ```
 
@@ -435,7 +454,7 @@ All criteria met. [any notable observations]
 
 ---
 
-## Usage Example
+### Usage Example
 
 **Starting the workflow:**
 
@@ -460,7 +479,7 @@ the existing API contract.
 
 ---
 
-## Comparison with Feature Implementation Workflow
+### Comparison with Feature Implementation Workflow
 
 | Aspect | Feature Implementation | Prompt Dispatch |
 |--------|----------------------|-----------------|
@@ -473,13 +492,13 @@ the existing API contract.
 
 ---
 
-## Integration Notes
+### Integration Notes
 
-**Claude Code adapter (Agent tool):**
-- Decomposer: `Agent(subagent_type="general-purpose", prompt=...)`
-- Workers: map `worker_kind` to the closest `subagent_type` and call `Agent(...)`
-- Validators: `Agent(subagent_type="general-purpose", prompt=...)` (one per worker, spawned in parallel)
-- Use `run_in_background: true` + `TaskOutput` for parallel groups of 3+
+**Codex subagent guidance:**
+- Decomposer: use the main Codex agent unless decomposition can run in parallel with other useful work; the default subagent role is usually sufficient.
+- Workers: map `worker_kind` to the closest available Codex role. Use `explorer` for bounded read-only codebase questions, `worker` for scoped implementation with clear file ownership, and `default` for general work.
+- Validators: use independent Codex subagents for parallel validation when useful, then inspect their reported evidence before integrating results.
+- For parallel groups of 3+, start independent subagents only when their work is self-contained and does not block the immediate local step. If subagents are unavailable, execute the same decomposition locally with explicit checkpoints between workers.
 
 **Other LLM tools and harnesses:**
 - The decomposer/validator instructions are self-contained prompts

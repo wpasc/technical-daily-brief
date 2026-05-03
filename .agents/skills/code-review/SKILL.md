@@ -1,15 +1,40 @@
 ---
 name: code-review
-description: Structured code review protocol with severity levels, test coverage requirements, security checklist, and language-specific considerations
+description: >-
+  Codex runtime skill generated from canonical `skills/code-review/SKILL.md`. Structured code review protocol with severity levels, test coverage requirements, security checklist, and language-specific considerations
 ---
 
-# Code Review
+# code-review (Codex Runtime Skill)
+
+Canonical source: `skills/code-review/SKILL.md`
+
+This file is self-contained for Codex runtime. Shared behavior belongs
+in the canonical source skill; regenerate this file after changing the
+source.
+
+## Codex Runtime Notes
+
+- Prefer `AGENTS.md` for root guidance. Treat `CLAUDE.md` only as supplemental fallback when older Claude-specific text in the inlined body requires it.
+- Use Codex-native tools and `.agents/skills/`; translate older Claude coordination wording in the body into explicit user requests, current tools, or durable artifacts when the workflow requires them.
+
+## Classification
+
+- Migration category: Generate as Codex runtime skill
+- Rationale: Workflow or reference guidance is useful in Codex as a self-contained runtime skill.
+
+## Skill-Specific Notes
+
+- Keep the source skill's reporting contract. In Codex, present findings first with file references, then assumptions or residual risks.
+
+## Inlined Skill Body
+
+## Code Review
 
 Structured code review protocol for pull requests.
 
 ---
 
-## Purpose
+### Purpose
 
 Perform structured code reviews that:
 
@@ -20,16 +45,16 @@ Perform structured code reviews that:
 
 ---
 
-## Review Process
+### Review Process
 
-### 1. Context Gathering
+#### 1. Context Gathering
 
 First, understand the change:
 - Read the PR description/commit messages
 - Identify the type of change (feature, bugfix, refactor, docs, tests, config)
 - Note the scope (files changed, lines added/removed)
 
-### 2. Project Standards (Load First)
+#### 2. Project Standards (Load First)
 
 Check for and apply local project rules:
 - Read AI guidance in harness priority order: `AGENTS.md` for Codex,
@@ -39,66 +64,66 @@ Check for and apply local project rules:
 - Apply any project-specific code style, architecture, or review requirements
 - These take precedence over general best practices
 
-### 3. Review Checklist
+#### 3. Review Checklist
 
-#### Functional Correctness
+##### Functional Correctness
 - Does the code do what the PR description claims?
 - Are edge cases handled appropriately?
 - Are error conditions handled (not silently swallowed)?
 
-#### Test Coverage (REQUIRED for Functional Changes)
+##### Test Coverage (REQUIRED for Functional Changes)
 - Do functional changes have corresponding test updates or new tests?
 - Do tests verify behavior, not implementation details?
 - Are edge cases and error paths tested?
 - If tests are missing, flag as blocking issue
 
-#### Code Quality
+##### Code Quality
 - Is the code readable and self-documenting?
 - Are names (variables, functions, classes) descriptive?
 - Is complexity appropriate (no over-engineering)?
 - Is there unnecessary duplication?
 
-#### Security (Critical)
+##### Security (Critical)
 - No hardcoded secrets, API keys, or credentials
 - User input validated and sanitized where applicable
 - No SQL injection, XSS, or command injection vulnerabilities
 - Sensitive data not logged or exposed in errors
 
-#### Architecture
+##### Architecture
 - Does the change fit the existing patterns in the codebase?
 - Are dependencies appropriate (not introducing unnecessary ones)?
 - Is the change in the right location/layer?
 
-#### Documentation
+##### Documentation
 - Are public APIs documented?
 - Are complex algorithms or non-obvious logic explained?
 - Is README/docs updated if behavior changes?
 
 ---
 
-## Severity Levels
+### Severity Levels
 
-### Blocking (Must Fix)
+#### Blocking (Must Fix)
 - **Missing tests for functional changes**
 - **Security vulnerabilities** - Hardcoded secrets, injection risks, auth bypasses
 - **Broken functionality** - Code doesn't do what PR claims
 - **Silent failures** - Errors caught and ignored without handling
 - **Data loss risks** - Destructive operations without safeguards
 
-### Non-Blocking (Should Consider)
+#### Non-Blocking (Should Consider)
 - Code clarity improvements
 - Performance optimizations (unless critical path)
 - Additional edge case handling
 - Documentation improvements
 
-### Nitpicks (Informational Only)
+#### Nitpicks (Informational Only)
 - Style preferences not in project style guide
 - Alternative approaches that aren't clearly better
 - Naming suggestions that are subjective
 
 ---
 
-## Output Format
+### Output Format
 
 ```markdown
 ### Summary
@@ -124,7 +149,7 @@ Check for and apply local project rules:
 
 ---
 
-## Security Red Flags
+### Security Red Flags
 
 - `password`, `secret`, `api_key` as string literals
 - `eval()`, `exec()`, or dynamic code execution
@@ -133,7 +158,7 @@ Check for and apply local project rules:
 - Disabled SSL/TLS verification
 - Overly permissive CORS settings
 
-## Reliability Red Flags
+### Reliability Red Flags
 
 - Any read-modify-write on a growing file or unbounded data container
   (re-read + concat + rewrite is O(dataset) memory)
@@ -146,7 +171,7 @@ Check for and apply local project rules:
 
 ---
 
-## Test Coverage Requirements
+### Test Coverage Requirements
 
 **Functional changes require test changes.**
 
@@ -156,7 +181,7 @@ What doesn't require new tests: documentation-only changes, config/environment c
 
 ---
 
-## Success Criteria
+### Success Criteria
 
 A good code review:
 - **Finds real issues** - Not just style nitpicks
