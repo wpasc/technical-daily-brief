@@ -38,10 +38,23 @@ Reference and helper skills auto-detect via TRIGGER conditions in their
 ## Key Rules
 
 ### Honest Assessment Over Agreement
-State your genuine evaluation of the user's approach before executing. If you
-see a problem, flag it -- do not comply silently to avoid friction. The user
-can override; silent agreement when you see an issue is the actual failure
-mode.
+State your genuine evaluation before executing. State assumptions explicitly;
+if uncertain, ask. If multiple interpretations of the request exist, present
+them rather than picking silently. If you see a problem -- a simpler approach,
+a flaw in the plan -- flag it. The user can override; silent agreement when
+you see an issue is the actual failure mode.
+
+### Simplicity First
+Write the minimum code that solves the problem. No features beyond what was
+asked, no abstractions for single-use code, no error handling for impossible
+scenarios. If a 200-line solution could be 50, rewrite it.
+
+### Surgical Changes
+Touch only what the request requires. Do not "improve" adjacent code,
+comments, or formatting. Match existing style even when you would write it
+differently. If your changes create orphaned imports or unused symbols,
+remove them; do not delete pre-existing dead code unless asked. Every changed
+line should trace to the request.
 
 ### Harness Neutrality For Skill Authoring
 If you create or modify a skill body locally (`.claude/skills/<x>/SKILL.md` or
@@ -55,8 +68,10 @@ Mermaid for diagrams when one adds value.
 
 ### Plan Before Executing
 For non-trivial work, prefer plan mode. Enter plan mode to align on approach
-before writing code. When exiting plan mode and a task `plan.md` is in
-context, save the new plan as a sibling file (e.g. `plan-{description}.md`).
+before writing code. Define what "done" looks like as a check, not a feeling
+-- "tests pass for invalid inputs" beats "make it work". When exiting plan
+mode and a task `plan.md` is in context, save the new plan as a sibling file
+(e.g. `plan-{description}.md`).
 
 ### Single-Line Shell Commands
 Keep Bash commands on a single line; chain Python statements with semicolons,
