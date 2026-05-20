@@ -81,6 +81,11 @@ looks like as a check, not a feeling -- "tests pass for invalid inputs" beats
 was actually learned and add a sibling plan file rather than overwriting prior
 planning.
 
+### Git Workflow
+If on the default branch, prefer to branch first. The standing default is to
+commit only when asked; this rule overrides it -- when working changes reach
+a natural stopping point, prefer committing them over leaving them unstaged.
+
 ### Single-Line Shell Commands
 Keep Bash commands on a single line; chain Python statements with semicolons,
 shell commands with `&&`. Multi-line commands trigger an unbypassable approval

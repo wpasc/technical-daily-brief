@@ -60,7 +60,7 @@ If the file does not exist, create it with this header:
 ```markdown
 # Guidance
 
-In-repo guidance for this project. The `compound` skill writes feedback captures here; standing instructions for working in this repo also live here. This file is auto-loaded into every Claude/Codex session via the `@`-imports in `CLAUDE.md` and `AGENTS.md`.
+In-repo guidance for this project. The `compound` skill writes feedback captures here; standing instructions for working in this repo also live here. This file is auto-loaded into every session via the `@`-imports in the root guidance file (`AGENTS.md` for Codex, `CLAUDE.md` for Claude).
 
 Review periodically -- promote useful patterns to cross-project standards or shared skills, discard what does not hold up.
 ```
@@ -99,7 +99,7 @@ When unsure, ask the user.
 
 ### Ensuring Guidance Loading
 
-After writing the entry, confirm that `CLAUDE.md` (and `AGENTS.md`, if present) `@`-import `guidance.local.md`. The provisioned templates already include this import; this is a belt-and-suspenders check for repos that have drifted or have not yet been re-synced.
+After writing the entry, confirm that the root guidance file (`AGENTS.md` for Codex, `CLAUDE.md` for Claude) `@`-imports `guidance.local.md`. The provisioned templates already include this import; this is a belt-and-suspenders check for repos that have drifted or have not yet been re-synced.
 
 If the import is missing, add it alongside the other top-level imports near the start of the file, e.g.:
 

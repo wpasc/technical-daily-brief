@@ -66,8 +66,9 @@ Documentation is not decoration or commentary. It is the **authoritative stateme
 Code structure is evidence of what *is*, not what *ought to be*. Inference from code never overrides a higher-authority source. If the code does X but the README says it does Y, the ambiguity must be resolved -- either the code has drifted or the docs have drifted, and that requires a human call. Neither silently wins.
 
 This is what makes documentation enforceable rather than aspirational. The
-audit-convergence workflow or command exists to surface exactly these drift
-signals.
+`audit-documentation` skill exists to surface exactly these drift signals
+(and `audit-repository` runs it alongside a code-quality vector for a
+full repo health pass).
 
 #### Self-evident Navigation
 
@@ -190,8 +191,9 @@ Documentation that doesn't match reality is worse than no documentation. Stale d
 2. **Link to code** -- include file paths and line numbers
 3. **Use tests as documentation** -- well-named tests explain behavior
 4. **Use git commits** -- good commit messages track changes and rationale
-5. **Run the audit-convergence workflow periodically** -- surfaces drift between
-   declared intent and observable code before it accumulates
+5. **Run the `audit-documentation` skill periodically** -- surfaces drift
+   between declared intent and observable code before it accumulates. Use
+   `audit-repository` when you want it bundled with a code-quality audit.
 
 #### Change Precedence when Docs and Code Disagree
 
