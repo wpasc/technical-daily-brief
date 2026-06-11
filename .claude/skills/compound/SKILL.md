@@ -1,6 +1,6 @@
 ---
 name: compound
-description: Capture session feedback as actionable guidance that prevents the same mistake in future sessions. TRIGGER when user says "compound" followed by feedback about what went wrong or could be improved. Also TRIGGER proactively when the agent detects a repeated mistake, a corrected assumption, or a pattern failure that existing guidance would have prevented.
+description: Capture session feedback as actionable guidance that prevents the same mistake in future sessions. TRIGGER when user says "compound" followed by feedback about what went wrong or could be improved. Also TRIGGER proactively when the agent detects a repeated mistake, a corrected assumption, or a pattern failure that existing guidance would have prevented. DO NOT TRIGGER when: the feedback is a one-off correction with no reusable lesson, or mid-task before the outcome is known.
 ---
 
 # Compound Guidance
@@ -28,7 +28,6 @@ This is not a bug report or a git commit message. It is a standing instruction f
 1. **Listen** -- Understand what happened: what went wrong, what the impact was, what should have been different
 2. **Synthesize** -- Generate a concrete, actionable guidance statement. Not a record of the complaint -- the rule or instruction that, if present in context, would have prevented the issue
 3. **Write** -- Append the entry to `guidance.local.md` at the working repo root
-4. **Ensure loading** -- Belt-and-suspenders check that the root AI guidance file `@`-imports `guidance.local.md`
 
 ## Routing
 
@@ -39,7 +38,7 @@ If the file does not exist, create it with this header:
 ```markdown
 # Guidance
 
-In-repo guidance for this project. The `compound` skill writes feedback captures here; standing instructions for working in this repo also live here. This file is auto-loaded into every session via the `@`-imports in the root guidance file (`AGENTS.md` for Codex, `CLAUDE.md` for Claude).
+In-repo guidance for this project. The `compound` skill writes feedback captures here; standing instructions for working in this repo also live here. The root guidance file (`AGENTS.md` for Codex, `CLAUDE.md` for Claude) is an intentionally minimal behavioral baseline; read this file on demand when working in this repo.
 
 Review periodically -- promote useful patterns to cross-project standards or shared skills, discard what does not hold up.
 ```
@@ -70,26 +69,15 @@ The guidance line is the thing that will be read in every future session. Write 
 ### Scope
 
 - **local** -- Applies to this project specifically. Default.
-- **promote-candidate** -- Could apply across projects. The marker is for the guidance-harvest workflow to pick up later; harvest is intentionally separate from the sync path.
+- **promote-candidate** -- Could apply across projects. The marker is for the guidance-harvest workflow (parked as the `guidance-harvest-prompt` Linear Issue) to pick up later; harvest is intentionally separate from the sync path.
 
 Use judgment: if the guidance is about a project-specific pattern (a particular API, a local convention), it is local. If it is about a general development practice, it is a promote-candidate.
 
 When unsure, ask the user.
 
-## Ensuring Guidance Loading
+## Root Guidance Is Minimal By Design
 
-After writing the entry, confirm that the root guidance file (`AGENTS.md` for Codex, `CLAUDE.md` for Claude) `@`-imports `guidance.local.md`. The provisioned templates already include this import; this is a belt-and-suspenders check for repos that have drifted or have not yet been re-synced.
-
-If the import is missing, add it alongside the other top-level imports near the start of the file, e.g.:
-
-```
-@README.md
-@guidance.local.md
-@../project-docs/{repo}/ACTIVE.md
-@../project-docs/{repo}/TODO.md
-```
-
-If the harness in use does not natively follow `@`-imports, document the file path in whatever external-context prose the root guidance uses instead. Do not force `@`-imports into harnesses that do not use them.
+Do not modify the root guidance file (`AGENTS.md` for Codex, `CLAUDE.md` for Claude) after writing an entry. Provisioned root baselines are source-owned, intentionally minimal, and clobbered on every sync -- do not add an `@guidance.local.md` import where one is absent. Where a repo's root guidance already imports `guidance.local.md` (some repo types do), leave that in place. `guidance.local.md` is on-demand standing context: read it when starting substantive work in a repo.
 
 ## Guidelines
 

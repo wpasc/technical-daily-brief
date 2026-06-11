@@ -88,24 +88,25 @@ and keeps each validation context focused on one unit of work.
 
 ---
 
-### Plan File Coordination
+### Linear Context Coordination
 
-If a task's `plan.md` is already loaded into the session's context (the
-`engage` skill matched the user's prompt against ACTIVE.md and pulled the
-plan in, or the orchestrator was working from that plan when dispatch was
-invoked), the dispatch workflow uses it as an external coordination artifact:
+If Linear Issue context is already loaded into the session (the `engage` skill
+matched the user's prompt, the user explicitly referenced an Issue, or the
+orchestrator was working from that Issue when dispatch was invoked), the
+dispatch workflow uses it as the external coordination artifact:
 
-1. **Before decomposition:** The plan's Goal, Approach, and current step
-   status inform sub-task breakdown.
-2. **After execution:** Update the plan file with completed steps and any
-   new information discovered during dispatch.
-3. **Worker prompts:** Include relevant plan context so workers understand
+1. **Before decomposition:** The Issue goal, description, latest handoff or
+   checkpoint comment, and current status inform sub-task breakdown.
+2. **After execution:** Post a handoff/checkpoint comment or update the Issue
+   description only when dispatch discovered material state that future
+   sessions need.
+3. **Worker prompts:** Include relevant Issue context so workers understand
    how their piece fits the larger goal.
 
 This means workers coordinate through a shared, persistent artifact
 rather than relying solely on the orchestrator's context window.
 
-If no task plan is loaded, dispatch operates standalone (no plan file).
+If no Linear Issue context is loaded, dispatch operates standalone.
 
 ---
 
@@ -123,21 +124,21 @@ mechanism, report that dispatch cannot run as designed rather than pretending
 to parallelize.
 
 
-## Phase 0: Load Plan Context (if a task plan is in scope)
+## Phase 0: Load Linear Context (if tracked work is in scope)
 
-If a task's `plan.md` is already loaded into context (the `engage` skill
-matched earlier in this session, or the user explicitly referenced a task
-folder), include the plan's Goal, Approach, and current step status as
-context for the decomposer in Phase 1.
+If a Linear Issue is already loaded into context (the `engage` skill matched
+earlier in this session, or the user explicitly referenced an Issue), include
+the Issue goal, description, latest handoff/checkpoint comment, and current
+status as context for the decomposer in Phase 1.
 
-If no task plan is in scope, skip to Phase 1.
+If no Linear Issue is in scope, skip to Phase 1.
 
 
 ## Phase 1: Decompose
 
 Start a single decomposer worker using the current harness's available
 worker/sub-agent mechanism. Pass it the user's original prompt verbatim. If
-plan context was loaded in Phase 0, append it to the prompt.
+Linear context was loaded in Phase 0, append it to the prompt.
 
 ### Decomposer Worker Instructions
 
@@ -343,16 +344,16 @@ After all validators return, consolidate their results:
 4. Move to Phase 4
 
 
-## Phase 4: Update Plan (if a task plan was loaded in Phase 0)
+## Phase 4: Update Linear (if tracked work was loaded in Phase 0)
 
-If a task's `plan.md` was loaded in Phase 0:
-1. Update `{task-path}/plan.md` -- mark completed steps, add new steps
-   discovered during dispatch, note any decisions made
-2. Write a status entry to `{task-path}/status.md` summarizing what
-   dispatch accomplished
+If Linear Issue context was loaded in Phase 0:
+1. Update the Issue description only when the goal, checklist, or durable
+   plan changed.
+2. Use `handoff` to write a checkpoint-mode comment when dispatch discovered
+   material status, decisions, or blockers future sessions need.
 
-This ensures the plan file stays current as the coordination artifact
-for future sessions and dispatch runs.
+This ensures Linear stays current as the coordination artifact for future
+sessions and dispatch runs.
 
 
 ## Phase 5: Report

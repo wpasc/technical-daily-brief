@@ -416,8 +416,9 @@ after 3 rounds of questions, exit with state `failed` and summary.
    - Phase 2: User cancels or requirements unclear
    - Phase 5: Reviewer decides to exit
 6. **Handoff Persistence:** For workflows spanning multiple sessions or tools,
-   use `.ai/a2a/` for disk-based persistence. For single-session workflows,
-   native tool coordination or available sub-agents can handle this in-memory.
+   use the `agent-handoff` JSON format for disk-based persistence. For
+   single-session workflows, native tool coordination or available sub-agents
+   can handle this in-memory.
 
 ## State Management
 

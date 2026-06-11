@@ -1,7 +1,7 @@
 ---
 name: code-review
 description: >-
-  Codex runtime skill generated from canonical `skills/code-review/SKILL.md`. Structured code review protocol with severity levels, test coverage requirements, security checklist, and language-specific considerations
+  Codex runtime skill generated from canonical `skills/code-review/SKILL.md`. Structured code review protocol with severity levels, test coverage requirements, security checklist, and language-specific considerations.
 ---
 
 # code-review (Codex Runtime Skill)

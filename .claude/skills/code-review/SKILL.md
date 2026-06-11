@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Structured code review protocol with severity levels, test coverage requirements, security checklist, and language-specific considerations
+description: Structured code review protocol with severity levels, test coverage requirements, security checklist, and language-specific considerations. TRIGGER when reviewing a diff, pull request, or proposed change for quality before merge, or when the user asks for a code review. DO NOT TRIGGER when the user wants a hostile second opinion (use adversarial-review or red-team), is debugging a specific bug (use systematic-debugging), or is auditing a whole repository (use audit-repository).
 ---
 
 # Code Review

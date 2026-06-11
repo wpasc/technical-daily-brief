@@ -1,6 +1,6 @@
 ---
 name: documentation-standards
-description: Documentation principles -- zero-context writing, declared intent, README placement stack, self-evident navigation, currency maintenance, and anti-patterns
+description: Documentation principles -- zero-context writing, declared intent, README placement stack, self-evident navigation, currency maintenance, and anti-patterns. TRIGGER when writing or restructuring READMEs or other docs, deciding where documentation belongs, or reviewing documentation quality. DO NOT TRIGGER when auditing existing docs against code reality (use audit-documentation) or making code changes with no documentation impact.
 user-invocable: false
 ---
 

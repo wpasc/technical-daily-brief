@@ -1,7 +1,7 @@
 ---
 name: documentation-standards
 description: >-
-  Codex runtime skill generated from canonical `skills/documentation-standards/SKILL.md`. Documentation principles -- zero-context writing, declared intent, README placement stack, self-evident navigation, currency maintenance, and anti-patterns
+  Codex runtime skill generated from canonical `skills/documentation-standards/SKILL.md`. Documentation principles -- zero-context writing, declared intent, README placement stack, self-evident navigation, currency maintenance, and anti-patterns.
 ---
 
 # documentation-standards (Codex Runtime Skill)
