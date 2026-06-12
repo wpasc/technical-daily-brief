@@ -7,6 +7,13 @@ in `CLAUDE.md` and `AGENTS.md`.
 
 ## Standing Rules
 
+### North Star
+
+`NORTH_STAR.md` at the repo root defines mission, hard constraints
+(zero dollars, no ID verification, truthfulness, hands-off), horizons,
+and the constraint priority order. Read it before substantive direction
+or feature decisions; it is the tie-breaker.
+
 ### Conventions: ASCII-only markdown, logging/exception patterns
 
 - All markdown files use ASCII only (no emojis, no Unicode symbols)

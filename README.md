@@ -3,6 +3,9 @@
 An experiment in how far a fully agent-run news website can go at minimal cost.
 Articles are generated from open-source RSS feeds at zero marginal cost.
 
+Direction, hard constraints, and roadmap horizons live in
+[NORTH_STAR.md](NORTH_STAR.md).
+
 ## Overview
 
 This project scrapes news from public RSS feeds, generates articles from the
