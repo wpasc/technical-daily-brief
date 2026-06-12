@@ -39,6 +39,7 @@ class Event(Base):
     source_name = Column(String(200), nullable=False, index=True)
     title = Column(String(500), nullable=False)
     raw_content = Column(Text, nullable=False)
+    image_url = Column(String(2000), nullable=True)
     scraped_at = Column(DateTime(timezone=True), server_default=func.now())
     processed = Column(Boolean, default=False, index=True)
 
@@ -62,6 +63,8 @@ class Article(Base):
     section = Column(String(100), nullable=False, index=True)
     priority = Column(Enum(ArticlePriority), default=ArticlePriority.MEDIUM, index=True)
     writer_persona = Column(String(200), nullable=False)
+    image_url = Column(String(2000), nullable=True)
+    image_credit = Column(String(200), nullable=True)
     published_at = Column(DateTime(timezone=True), server_default=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

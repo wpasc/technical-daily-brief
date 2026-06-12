@@ -1,4 +1,4 @@
-.PHONY: setup dev test scrape write backend frontend clean init-db venv
+.PHONY: setup dev test scrape write edition backend frontend clean init-db venv
 
 # Create virtual environment
 venv:
@@ -31,11 +31,14 @@ init-db:
 
 # Run scraper
 scrape:
-	cd backend && python -m scrapers.run_scraper
+	python scrapers/run_scraper.py
 
-# Run story writer
+# Run story writer (markov engine by default, zero cost)
 write:
-	cd backend && python -m story_writer.run_writer
+	python story_writer/run_writer.py
+
+# Publish a fresh edition: scrape feeds then write articles
+edition: scrape write
 
 # Clean build artifacts
 clean:

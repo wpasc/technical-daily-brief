@@ -50,6 +50,7 @@ def submit_event(event: ScrapedEvent, api_url: str) -> bool:
                 "source_name": event.source_name,
                 "title": event.title,
                 "raw_content": event.raw_content,
+                "image_url": event.image_url,
             },
             timeout=30.0,
         )

@@ -15,7 +15,7 @@ in `CLAUDE.md` and `AGENTS.md`.
 
 ### Environment Variables
 
-- ANTHROPIC_API_KEY: Claude API key (required for story writer)
+- ANTHROPIC_API_KEY: Claude API key (only for story writer --engine claude; default markov engine needs no key)
 - DATABASE_URL: Database connection string (defaults to SQLite)
 
 ### Key testing patterns: coverage targets, test-driven behavior

@@ -1,20 +1,31 @@
 # Story Writer
 
-LLM-powered article generation module that transforms raw news events into polished articles.
+Article generation module that transforms raw news events into articles.
+
+Two engines:
+
+- **markov** (default): zero-cost Markov chains trained on the day's scraped
+  text. No API calls, no key. Output is word salad that remixes real news
+  vocabulary, seeded per-event so each article loosely tracks a real story.
+- **claude**: LLM-generated articles via the Anthropic API. Requires
+  `ANTHROPIC_API_KEY`. Swap back in when the budget allows.
 
 ## Purpose
 
-Takes unprocessed events from the backend API, uses Claude to generate well-written articles with distinct writer personas, and submits the generated articles back to the API.
+Takes unprocessed events from the backend API, generates articles with
+distinct writer personas, and submits the generated articles back to the API.
 
 ## Architecture
 
 ```
 story_writer/
-  run_writer.py       # CLI entry point
+  run_writer.py       # CLI entry point (--engine markov|claude)
+  article.py          # GeneratedArticle dataclass shared by engines
+  markov_writer.py    # MarkovWriter: zero-cost chain-based generation
   writer.py           # ArticleWriter class using Anthropic SDK
   personas.py         # Writer persona definitions
   prompts/
-    article_prompt.py # Prompt templates for article generation
+    article_prompt.py # Prompt templates for article generation (claude)
     system_prompts.py # System prompts for each persona
 ```
 
@@ -24,8 +35,11 @@ story_writer/
 # From project root
 source .venv/bin/activate
 
-# Normal run (generates and submits articles)
+# Normal run (markov engine, free)
 python story_writer/run_writer.py
+
+# Use Claude instead (requires ANTHROPIC_API_KEY)
+python story_writer/run_writer.py --engine claude
 
 # Dry run (shows what would be generated)
 python story_writer/run_writer.py --dry-run
@@ -39,7 +53,7 @@ python story_writer/run_writer.py --api-url http://localhost:8000
 
 ## Environment Variables
 
-- `ANTHROPIC_API_KEY`: Required. Your Claude API key.
+- `ANTHROPIC_API_KEY`: Only required for `--engine claude`.
 
 ## Writer Personas
 
@@ -58,11 +72,10 @@ Personas are defined in `personas.py` and matched to content type during generat
 ## How It Works
 
 1. Fetches unprocessed events from `GET /api/events?processed=false`
-2. For each event:
-   - Selects appropriate writer persona
-   - Constructs prompt with event content
-   - Calls Claude API to generate article
-   - Parses response into `GeneratedArticle`
+2. markov engine only: trains headline/body chains on the whole batch
+3. For each event:
+   - Generates headline, excerpt, and body (chain sampling or Claude API)
+   - Classifies section (keyword scoring or Claude) and selects persona
    - Submits to `POST /api/articles`
    - Marks event as processed via `PATCH /api/events/{id}`
 

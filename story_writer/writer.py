@@ -3,11 +3,11 @@ import json
 import logging
 import os
 import re
-from dataclasses import dataclass
 from typing import Optional
 
 from anthropic import Anthropic
 
+from story_writer.article import GeneratedArticle
 from story_writer.personas import WriterPersona
 from story_writer.prompts.article_prompt import (
     ARTICLE_GENERATION_PROMPT,
@@ -15,18 +15,6 @@ from story_writer.prompts.article_prompt import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class GeneratedArticle:
-    """Represents a generated article."""
-
-    headline: str
-    excerpt: str
-    content: str
-    section: str
-    priority: str
-    writer_persona: str
 
 
 class ArticleWriter:

@@ -17,6 +17,8 @@ class ArticleCreate(BaseModel):
     section: str = Field(..., max_length=100)
     priority: ArticlePriority = ArticlePriority.MEDIUM
     writer_persona: str = Field(..., max_length=200)
+    image_url: Optional[str] = Field(None, max_length=2000)
+    image_credit: Optional[str] = Field(None, max_length=200)
 
 
 class ArticleResponse(BaseModel):
@@ -30,6 +32,8 @@ class ArticleResponse(BaseModel):
     section: str
     priority: str
     writer_persona: str
+    image_url: Optional[str]
+    image_credit: Optional[str]
     published_at: datetime
     created_at: datetime
 

@@ -50,6 +50,19 @@ h1, h2, h3, h4 {
   font-style: italic;
 }
 
+.masthead-line {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+  font-size: 0.75rem;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* Featured Story */
 .featured-story {
   background-color: #fff;
@@ -175,6 +188,94 @@ h1, h2, h3, h4 {
   margin-bottom: 12px;
 }
 
+/* Clickable stories */
+.clickable {
+  cursor: pointer;
+}
+
+/* Story images */
+.story-image {
+  margin: 0 0 16px;
+}
+
+.story-image img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.story-image figcaption {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 6px;
+}
+
+.featured-image img {
+  max-height: 420px;
+}
+
+.card-image {
+  margin: -20px -20px 14px;
+}
+
+.card-image img {
+  height: 180px;
+}
+
+.article-image {
+  margin: 0 0 24px;
+}
+
+.article-image img {
+  max-height: 480px;
+}
+
+/* Article Page */
+.article-page {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 40px;
+  max-width: 760px;
+  margin: 0 auto 32px;
+}
+
+.article-page h2 {
+  font-size: 2rem;
+  margin: 12px 0 16px;
+}
+
+.article-page .meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.article-page .article-body p {
+  font-size: 1.05rem;
+  margin-bottom: 18px;
+  color: #222;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.back-link:hover {
+  color: #1a1a1a;
+}
+
 /* Footer */
 .footer {
   background-color: #1a1a1a;
@@ -184,6 +285,7 @@ h1, h2, h3, h4 {
   text-align: center;
   font-size: 0.85rem;
 }
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -198,5 +300,9 @@ h1, h2, h3, h4 {
   .story-grid.columns-2,
   .story-grid.columns-3 {
     grid-template-columns: 1fr;
+  }
+
+  .article-page {
+    padding: 24px;
   }
 }

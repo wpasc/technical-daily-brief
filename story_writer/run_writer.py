@@ -11,8 +11,6 @@ sys.path.insert(0, str(project_root / "backend"))
 
 import httpx
 
-from story_writer.writer import ArticleWriter
-
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -99,6 +97,7 @@ def run_writer(
     api_url: str = "http://localhost:8000",
     limit: int = 10,
     dry_run: bool = False,
+    engine: str = "markov",
 ):
     """
     Run the story writer.
@@ -107,6 +106,7 @@ def run_writer(
         api_url: Backend API URL
         limit: Maximum events to process
         dry_run: If True, don't submit or mark processed
+        engine: Generation engine ("markov" is free, "claude" needs an API key)
     """
     # Fetch unprocessed events
     events = fetch_unprocessed_events(api_url, limit=limit)
@@ -116,8 +116,17 @@ def run_writer(
         logger.info("No events to process")
         return
 
-    # Initialize writer
-    writer = ArticleWriter()
+    # Initialize writer (imports are lazy so the markov engine
+    # works without the anthropic package or an API key)
+    if engine == "claude":
+        from story_writer.writer import ArticleWriter
+
+        writer = ArticleWriter()
+    else:
+        from story_writer.markov_writer import MarkovWriter
+
+        writer = MarkovWriter()
+        writer.train(events)
 
     articles_generated = 0
     articles_submitted = 0
@@ -143,6 +152,9 @@ def run_writer(
                 "section": article.section,
                 "priority": article.priority,
                 "writer_persona": article.writer_persona,
+                # Pass the source's editorial image through with credit
+                "image_url": event.get("image_url"),
+                "image_credit": event["source_name"] if event.get("image_url") else None,
             }
 
             if dry_run:
@@ -161,7 +173,7 @@ def run_writer(
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Generate articles from events using LLM")
+    parser = argparse.ArgumentParser(description="Generate articles from events")
     parser.add_argument(
         "--api-url",
         default="http://localhost:8000",
@@ -178,9 +190,15 @@ def main():
         action="store_true",
         help="Don't submit articles, just print what would be generated",
     )
+    parser.add_argument(
+        "--engine",
+        choices=["markov", "claude"],
+        default="markov",
+        help="Generation engine: markov (zero-cost, default) or claude (requires ANTHROPIC_API_KEY)",
+    )
     args = parser.parse_args()
 
-    run_writer(api_url=args.api_url, limit=args.limit, dry_run=args.dry_run)
+    run_writer(api_url=args.api_url, limit=args.limit, dry_run=args.dry_run, engine=args.engine)
 
 
 if __name__ == "__main__":

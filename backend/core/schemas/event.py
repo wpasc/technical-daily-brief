@@ -12,6 +12,7 @@ class EventCreate(BaseModel):
     source_name: str = Field(..., max_length=200)
     title: str = Field(..., max_length=500)
     raw_content: str
+    image_url: Optional[str] = Field(None, max_length=2000)
 
 
 class EventUpdate(BaseModel):
@@ -28,6 +29,7 @@ class EventResponse(BaseModel):
     source_name: str
     title: str
     raw_content: str
+    image_url: Optional[str]
     scraped_at: datetime
     processed: bool
 

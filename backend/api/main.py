@@ -2,7 +2,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import events_router, articles_router, health_router, healthz_router, writers_router
+from api.routers import (
+    articles_router,
+    events_router,
+    health_router,
+    healthz_router,
+    writers_router,
+)
 from core.database.session import init_db
 from core.logging_config import setup_logging
 

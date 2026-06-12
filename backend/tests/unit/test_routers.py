@@ -52,6 +52,7 @@ def create_mock_event(
     mock.source_name = source_name
     mock.title = title
     mock.raw_content = raw_content
+    mock.image_url = None
     mock.processed = processed
     mock.scraped_at = datetime.now(timezone.utc)
     return mock
@@ -77,6 +78,8 @@ def create_mock_article(
     mock.section = section
     mock.priority = priority.value if isinstance(priority, ArticlePriority) else priority
     mock.writer_persona = writer_persona
+    mock.image_url = None
+    mock.image_credit = None
     mock.published_at = datetime.now(timezone.utc)
     mock.created_at = datetime.now(timezone.utc)
     return mock

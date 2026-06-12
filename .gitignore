@@ -18,6 +18,7 @@ env/
 
 # Database
 data/*.db
+backend/data/*.db
 *.sqlite3
 
 # Node

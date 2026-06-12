@@ -15,6 +15,7 @@ class ScrapedEvent:
     source_name: str
     title: str
     raw_content: str
+    image_url: Optional[str] = None
 
 
 class BaseScraper(ABC):

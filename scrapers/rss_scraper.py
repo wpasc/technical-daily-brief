@@ -116,7 +116,60 @@ class RssScraper(BaseScraper):
             source_name=self.source_name,
             title=title,
             raw_content=content,
+            image_url=self._get_entry_image(entry),
         )
+
+    def _get_entry_image(self, entry) -> Optional[str]:
+        """
+        Extract an image URL from an RSS entry.
+
+        Checks media:thumbnail and media:content (picking the largest
+        by declared width), then image enclosure links. Most major feeds
+        (BBC, Guardian, NPR) ship editorial images this way, so the photo
+        actually belongs to the story.
+
+        Args:
+            entry: Feedparser entry
+
+        Returns:
+            Image URL or None
+        """
+        for key in ("media_thumbnail", "media_content"):
+            best_url = None
+            best_width = -1
+            for item in entry.get(key) or []:
+                url = item.get("url")
+                if not url:
+                    continue
+                medium = item.get("medium", "image")
+                if medium != "image":
+                    continue
+                try:
+                    width = int(item.get("width") or 0)
+                except (TypeError, ValueError):
+                    width = 0
+                if width > best_width:
+                    best_url, best_width = url, width
+            if best_url:
+                return self._upgrade_known_cdn_sizes(best_url)
+
+        for link in entry.get("links") or []:
+            if link.get("rel") == "enclosure" and str(link.get("type", "")).startswith("image/"):
+                return self._upgrade_known_cdn_sizes(link.get("href"))
+
+        return None
+
+    @staticmethod
+    def _upgrade_known_cdn_sizes(url: Optional[str]) -> Optional[str]:
+        """
+        Swap known size-parameterized CDN URLs to a larger variant.
+
+        BBC feeds ship 240px thumbnails, but their image CDN serves the
+        same asset at standard widths via the path segment.
+        """
+        if url and "ichef.bbci.co.uk" in url and "/standard/240/" in url:
+            return url.replace("/standard/240/", "/standard/800/")
+        return url
 
     def _get_rss_content(self, entry) -> str:
         """
