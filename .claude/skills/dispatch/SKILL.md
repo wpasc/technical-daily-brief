@@ -461,9 +461,9 @@ the existing API contract.
 
 ---
 
-## Comparison with Feature Implementation Workflow
+## Comparison with Implement Feature Workflow
 
-| Aspect | Feature Implementation | Prompt Dispatch |
+| Aspect | Implement Feature Workflow | Prompt Dispatch |
 |--------|----------------------|-----------------|
 | Scope | New features only | Any prompt |
 | Flow | Sequential (5 phases) | Fan-out / fan-in |

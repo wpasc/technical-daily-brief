@@ -1,7 +1,9 @@
 ---
 name: worked-example
-description: Explain software systems through concrete worked examples. TRIGGER when the user asks to walk through a case, trace what happens for an input, understand a system under the hood, see example values, follow a request end-to-end, or learn from a realistic scenario before abstract explanation. DO NOT TRIGGER for broad summaries or implementation tasks unless the user needs an example-first explanation.
+description: >-
+  Explain software systems through concrete worked examples. Use when the user asks to walk through a case, trace what happens for an input, understand a system under the hood, see example values, follow a request end-to-end, or learn from a realistic scenario before abstract explanation. Do not use for broad summaries or implementation tasks unless the user needs an example-first explanation.
 user-invocable: true
+argument-hint: "scenario, input, request, user case, or system behavior to walk through"
 ---
 
 # Worked Example
@@ -20,7 +22,7 @@ Teach a system by walking one realistic case end-to-end before generalizing.
    - Prefer tests, fixtures, logs, docs, or API examples that already contain realistic values.
    - Cite concrete source paths and line numbers for claims about code behavior.
 3. Build the example setup:
-   - Actors, records, IDs.
+   - Actors / records / IDs.
    - Starting state.
    - Input request or event.
    - Expected output or observable symptom.
@@ -33,7 +35,7 @@ Teach a system by walking one realistic case end-to-end before generalizing.
    - What to notice.
    - Edge cases or mismatch patterns.
    - How to swap in the user's own values.
-6. Pair with `system-diagrams` when a small visual trace would clarify the journey; read that skill's `SKILL.md` first.
+6. Pair with `system-diagrams` when a small visual trace would clarify the journey.
 
 ## Output Shape
 
@@ -91,6 +93,10 @@ Non-triggers:
 - "Review this PR."
 - "Generate a diagram only."
 
-## Local Evidence
+## Useful Local Examples
 
-Use examples already present in the current corpus: tests, fixtures, API examples, docs, logs, PRs, or user-provided traces. Do not depend on private note paths unless the user supplies them in the current session.
+Load these only when useful and only if the paths exist in this environment or are supplied by the user:
+
+- Feature-doc worked examples for a full example-first debugging journey.
+- API lifecycle notes for request lifecycle examples.
+- Investigation playbooks for concrete trace and proof shape.

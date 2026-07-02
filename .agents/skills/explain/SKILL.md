@@ -63,12 +63,10 @@ from the diff/proposal text. Each side is its own claim source.
 
 ### Artifact Format
 
-Write one markdown file per question at `/tmp/explain/<slug>/artifact.md`. It has two jobs:
-
-1. Every load-bearing statement is independently checkable by a skeptic.
-2. Structured sections feed output channels mechanically.
-
-Use these sections in order. Omit a section only when the question shape does not need it.
+Write one markdown file per question at `/tmp/explain/<slug>/artifact.md`. Two jobs: (1) every
+load-bearing statement is independently checkable by a skeptic, (2) the structured sections feed
+the output channels mechanically. Sections in order; omit a section only when the question shape
+doesn't need it.
 
 #### Header
 
@@ -82,11 +80,11 @@ Question (verbatim), shape, tier, domains researched, explicitly out of scope.
 One row per atomic, falsifiable statement. Evidence is `path:line` or URL; multiple pointers are
 allowed. Status is `unverified`, `verified`, or `imprecise (note)`. Write claims a hostile reviewer
 can check in under two minutes each. If a statement needs no evidence, it is probably not
-load-bearing; cut it.
+load-bearing - cut it.
 
-#### Entities & Relations
+#### Entities & Relations <- feeds the visual diagram channel
 
-Feeds the diagram channel. Near-D2 lines, one per node or edge, each tagged with claim IDs:
+Renderer-neutral graph lines, one per node or edge, each tagged with claim IDs:
 
 ```text
 api_server: Flask app behind nginx (C1)
@@ -94,36 +92,32 @@ api_server -> charge_worker: enqueues ChargeJob via Redis (C3, C4)
 billing: { charge_worker; retry_queue }  # container when ownership matters
 ```
 
-This section must be mechanically translatable to D2 or Mermaid. The renderer adds layout and
-styling, not edges.
+This section must be mechanically translatable to visual renderers such as D2, Mermaid, or
+FigJam/Figma. The renderer adds layout and styling, not facts, nodes, or edges.
 
-#### Trace
+#### Trace <- feeds the worked-example channel (mechanism / lifecycle shapes)
 
-Feeds the worked-example channel for mechanism and lifecycle shapes.
-
-Use one concrete scenario with pinned, realistic values. Numbered steps; each step names actor,
-action, important value or state change, and claim refs:
+ONE concrete scenario with pinned, realistic values. Numbered steps; each step names actor, action,
+the important value or state change, and claim refs:
 
 ```text
 Scenario: patron 8841 joins creator 312's $5 tier
-1. Browser -> POST /api/memberships {tier_id: 977} (C2) -- row inserted, status=pending
+1. Browser -> POST /api/memberships {tier_id: 977} (C2) - row inserted, status=pending
 2. ...
 ```
 
 If values are illustrative rather than sourced, say so once at the top of the section.
 
-#### Decision Delta
-
-Decision shape only.
+#### Decision Delta (decision shape only)
 
 | Aspect | Before (claim refs) | After (claim refs) |
 |---|---|---|
 
-Both columns cite claims. After claims cite the proposal or diff itself as evidence.
+Both columns cite claims. "After" claims cite the proposal/diff itself as evidence.
 
 #### Open Questions
 
-Everything believed but unproven, plus claims demoted by verification. Never silently drop these.
+Everything believed but unproven, plus claims demoted by verification. Never silently dropped.
 
 #### Verification Log
 
@@ -174,10 +168,10 @@ guidance:
 
 - Worked example: render from the Trace section. Prefer concrete values, before/after states, and
   short explanatory prose.
-- Diagram: render from Entities & Relations. Use the repo's diagram standard if one exists;
-  otherwise use Mermaid for inline answers. If D2 is available and the user needs a local SVG,
-  D2 is acceptable. For before/after diagrams, produce two diagrams with the same layout and
-  visually mark changed elements.
+- Diagram: render from Entities & Relations. Read `system-diagrams` first when available. Treat the
+  artifact as renderer-neutral facts; the diagram renderer adds layout and styling, not facts,
+  nodes, or edges. Prefer hand-authored SVG for durable visuals; use inline Mermaid only when the
+  user or destination explicitly requires that format.
 - Comparison table: use Decision Delta or comparison dimensions as rows. Every cell must trace to
   a claim ID.
 - State table: derive states x events from Trace and Relations. Include claim refs in cells.
