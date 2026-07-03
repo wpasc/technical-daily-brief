@@ -209,8 +209,10 @@ The `.svg` file is the source of truth - write it to disk first, then deliver ba
 Don't paste `<svg>` inline and assume it renders: over SSH, in a plain terminal, or outside the desktop
 app it shows up as a raw blob. Pick the destination from context; ask only when it is genuinely unclear.
 
-- Task work -> Linear. Upload and embed as an image so the diagram lives with the issue. Steps:
-  `reference/publishing-to-linear.md`. Raw `<svg>` pasted into a Linear body renders as literal text.
+- Task work -> Linear. Upload the `.svg` as a file attachment through whatever Linear access the
+  session has (MCP attachment upload, or the GraphQL file-upload mutation), then embed the returned
+  URL as a markdown image in the issue body or comment. Raw `<svg>` pasted into a Linear body
+  renders as literal text.
 - Learning / research -> eng-notes. Save the `.svg` somewhere sensible in eng-notes and link it from
   the note, beside the prose it illustrates.
 - Inline -> only when you know the surface renders SVG. When unsure, write the file and use one of the above.
