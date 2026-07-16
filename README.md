@@ -1,161 +1,62 @@
-# AI News Site
+# Technical Daily Brief
 
-An experiment in how far a fully agent-run news website can go at minimal cost.
-Articles are generated from open-source RSS feeds at zero marginal cost.
+A personal daily technical news site. Every morning a scheduled agent reads a
+fixed set of public feeds, curates the handful of items a working engineer
+would actually care about, and writes a short digest. The digests accumulate
+in [`briefs/`](briefs/) and render as a static site on GitHub Pages.
 
-Direction, hard constraints, and roadmap horizons live in
-[NORTH_STAR.md](NORTH_STAR.md).
+This is the website spin on the "personal daily brief" idea: instead of a
+brief delivered *to* you, it is a small newspaper that publishes itself.
 
-## Overview
-
-This project scrapes news from public RSS feeds, generates articles from the
-scraped text, and displays them on a newspaper-style React frontend. The
-default generation engine is a Markov chain trained on each run's scraped
-content: free to run, no API key, and the word salad it produces remixes the
-day's real news vocabulary. A Claude-powered engine remains available behind
-`--engine claude` for when the budget allows.
-
-## Architecture
+## How it works
 
 ```
-RSS Feeds --> Scraper --> Events DB --> Story Writer --> Articles DB --> Frontend
-                                              |
-                                   markov chains (default, free)
-                                   or Claude API (--engine claude)
+brief/sources.json --> brief/gather.py --> brief/.context.md
+                                                |
+                              scheduled Claude agent (RUN.md)
+                                                |
+                                    briefs/YYYY-MM-DD.md  (committed)
+                                                |
+                       GitHub Action: site/build.py --> GitHub Pages
 ```
 
-- **Scraper**: Fetches RSS feeds from major news outlets (BBC, NPR, Guardian, etc.),
-  including each story's editorial image when the feed provides one (most do).
-  Images are hotlinked from the source CDN and credited on the page; no image
-  API or storage costs.
-- **Story Writer**: Transforms raw events into articles with different writer personas
-- **Backend**: FastAPI REST API with SQLite database
-- **Frontend**: React app with newspaper-style layout
+- **Gather** ([brief/gather.py](brief/gather.py)): stdlib-only fetch of
+  no-auth RSS/Atom feeds into a single context file. No API keys anywhere.
+- **Write** ([RUN.md](RUN.md)): a Claude cloud routine reads the context and
+  [brief/writing-guide.md](brief/writing-guide.md), writes the day's brief,
+  and commits it. The agent's judgment is the curation; the guide is the
+  contract (3-8 items per section, every claim linked, no padding).
+- **Render** ([site/build.py](site/build.py)): a GitHub Action turns the
+  markdown archive into plain HTML/CSS and deploys to Pages on every push,
+  so hand-edits and backfills rebuild the site too.
 
-## Quick Start
+Sections in v0: **AI/LLM developments** and **Engineering & systems**.
 
-### Prerequisites
+## Running locally
 
-- Python 3.12+
-- Node.js 18+
-- uv (Python package manager)
-- Anthropic API key (optional, only for `--engine claude`)
-
-### Setup
-
-1. Clone and navigate to the project:
-   ```bash
-   cd projects/news_site
-   ```
-
-2. Copy environment file:
-   ```bash
-   cp .env.example .env
-   # Optional: add ANTHROPIC_API_KEY if using --engine claude
-   ```
-
-3. Install dependencies:
-   ```bash
-   make setup
-   ```
-
-4. Initialize the database:
-   ```bash
-   source .venv/bin/activate
-   cd backend && PYTHONPATH=. python -c "from core.database.session import init_db; init_db()"
-   ```
-
-### Running
-
-**Option 1: Docker (recommended)**
 ```bash
-make dev
+python3 brief/gather.py                 # fetch feeds -> brief/.context.md
+# write briefs/<YYYY-MM-DD>.md (see brief/writing-guide.md), then:
+pip install markdown==3.6
+python3 site/build.py                   # render -> _site/
+python3 -m http.server 8080 -d _site    # http://localhost:8080
 ```
 
-**Option 2: Manual**
+## Repository layout
 
-Terminal 1 - Backend:
-```bash
-source .venv/bin/activate
-cd backend && PYTHONPATH=. uvicorn api.main:app --reload --port 8000
-```
+| Path | Role |
+|---|---|
+| `brief/sources.json` | Feed list with curation notes. Long-term source preferences. |
+| `brief/gather.py` | Stdlib-only feed fetcher. |
+| `brief/writing-guide.md` | Format and voice contract for every brief. |
+| `briefs/<date>.md` | Committed output. The archive is the site content. |
+| `RUN.md` | Runbook and the exact routine prompt. |
+| `site/build.py`, `site/style.css` | Static site renderer. |
+| `network-allowlist.txt` | Feed domains for the routine's egress allowlist. |
 
-Terminal 2 - Frontend:
-```bash
-cd frontend && npm start
-```
+## One-time setup
 
-### Generating Content
-
-Publish a fresh edition (scrape + write) in one step:
-```bash
-source .venv/bin/activate
-make edition
-```
-
-Or run the steps individually:
-
-1. Scrape news from RSS feeds:
-   ```bash
-   python scrapers/run_scraper.py
-   ```
-
-2. Generate articles (markov engine by default, zero cost):
-   ```bash
-   python story_writer/run_writer.py
-   # or, with an API key: python story_writer/run_writer.py --engine claude
-   ```
-
-3. View at http://localhost:3000
-
-## Project Structure
-
-```
-news_site/
-  backend/
-    api/              # FastAPI routes
-    core/
-      models/         # SQLAlchemy models
-      repositories/   # Data access layer
-      schemas/        # Pydantic schemas
-      database/       # DB session management
-    lib/config/       # Configuration
-  scrapers/           # RSS scrapers
-  story_writer/       # LLM article generation
-  frontend/           # React app
-  data/               # SQLite database
-```
-
-## Writer Personas
-
-Articles are bylined by one of five writer personas (matched to section):
-
-- **Alex Chen** - Analytical Reporter: Data-driven, factual analysis
-- **Sarah Mitchell** - Investigative Correspondent: Deep-dive investigations
-- **Marcus Webb** - Tech Analyst: Technology and science coverage
-- **Elena Rodriguez** - Human Interest Reporter: People-focused stories
-- **David Park** - Commentary Writer: Opinion and analysis
-
-## API Reference
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| /api/health | GET | Health check |
-| /api/events | GET | List events (?processed=false for unprocessed) |
-| /api/events | POST | Create event (from scraper) |
-| /api/events/{id} | PATCH | Update event (mark processed) |
-| /api/articles | GET | List articles (?section=X for filtering) |
-| /api/articles | POST | Create article (from writer) |
-| /api/writers | GET | List writer personas |
-
-## Configuration
-
-Copy `config.example.yaml` to `config.yaml` to customize:
-- RSS feed sources
-- Rate limiting
-- LLM model and parameters
-- API settings
-
-## Development
-
-See `CLAUDE.md` for development guidelines and conventions.
+1. Create a Claude cloud routine with the prompt in [RUN.md](RUN.md),
+   scheduled daily; configure its network egress per the same file.
+2. In the repository settings, enable GitHub Pages with **GitHub Actions** as
+   the source. (Pages requires the repository to be public on a free plan.)
