@@ -1,0 +1,52 @@
+{
+  "sections": [
+    "AI/LLM developments",
+    "Engineering & systems"
+  ],
+  "sources": [
+    {
+      "name": "Simon Willison's Weblog",
+      "url": "https://simonwillison.net/atom/everything/",
+      "section": "AI/LLM developments",
+      "notes": "High-signal LLM commentary; reliably covers Anthropic/OpenAI/Google announcements, so official feeds that lack RSS are covered here."
+    },
+    {
+      "name": "OpenAI News",
+      "url": "https://openai.com/news/rss.xml",
+      "section": "AI/LLM developments",
+      "notes": "Official announcements. Ignore pure marketing posts."
+    },
+    {
+      "name": "Interconnects",
+      "url": "https://www.interconnects.ai/feed",
+      "section": "AI/LLM developments",
+      "notes": "Research-adjacent analysis of the LLM landscape."
+    },
+    {
+      "name": "Hugging Face Blog",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "section": "AI/LLM developments",
+      "notes": "Open-source models, datasets, and tooling."
+    },
+    {
+      "name": "Hacker News (best)",
+      "url": "https://hnrss.org/best",
+      "section": "Engineering & systems",
+      "notes": "Community-ranked. Only genuinely technical items make the brief; skip business news and flamebait."
+    },
+    {
+      "name": "Lobsters",
+      "url": "https://lobste.rs/rss",
+      "section": "Engineering & systems",
+      "notes": "Technical link aggregator; lower noise than HN."
+    },
+    {
+      "name": "The Pragmatic Engineer",
+      "url": "https://blog.pragmaticengineer.com/rss/",
+      "section": "Engineering & systems",
+      "notes": "Industry engineering analysis; free posts only appear in the feed."
+    }
+  ],
+  "max_items_per_source": 15,
+  "max_age_hours": 36
+}

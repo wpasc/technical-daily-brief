@@ -1,40 +1,32 @@
 # Guidance
 
-In-repo guidance for `news_site`. The `compound` skill writes feedback
-captures here; standing instructions for working in this repo also live here.
-This file is auto-loaded into every Claude/Codex session via the `@`-imports
-in `CLAUDE.md` and `AGENTS.md`.
+In-repo guidance for `technical-daily-brief`. The `compound` skill writes
+feedback captures here; standing instructions for working in this repo also
+live here.
 
 ## Standing Rules
 
-### North Star
+### Direction
 
-`NORTH_STAR.md` at the repo root defines mission, hard constraints
-(zero dollars, no ID verification, truthfulness, hands-off), horizons,
-and the constraint priority order. Read it before substantive direction
-or feature decisions; it is the tie-breaker.
+This repo is public. Direction and decision history live in the project-docs
+repo (`project-docs/technical-daily-brief/`) and the Linear project
+"Technical Daily Brief" -- not in a NORTH_STAR.md here. Keep personal profile
+data (study topics, learning gaps) out of this repo.
 
-### Conventions: ASCII-only markdown, logging/exception patterns
+### Pipeline invariants
 
-- All markdown files use ASCII only (no emojis, no Unicode symbols)
-- Logging via Python logging module (no print statements)
-- Error handling via custom exception hierarchy (core/exceptions.py)
+- No metered LLM calls anywhere in the pipeline. The brief is written by an
+  agent session on the owner's Claude subscription (see RUN.md); gather and
+  build are plain Python.
+- `brief/gather.py` stays stdlib-only. The single allowed dependency is
+  `markdown` (pinned) in `site/build.py` and the Pages workflow.
+- The routine's job ends at committed markdown in `briefs/`; rendering
+  belongs to the GitHub Action.
+- Keep `network-allowlist.txt` in sync with `brief/sources.json`.
 
-### Environment Variables
+### Conventions
 
-- ANTHROPIC_API_KEY: Claude API key (only for story writer --engine claude; default markov engine needs no key)
-- DATABASE_URL: Database connection string (defaults to SQLite)
-
-### Key testing patterns: coverage targets, test-driven behavior
-
-```bash
-make test
-# or: cd backend && pytest tests/ -v
-```
-
-- Coverage targets: 80%+ for new modules, 90%+ for critical paths
-- Test paths: `backend/tests/`
-
-### Dev/Prod Parity
-
-Keep development and production environments as similar as possible. If production runs in containers, develop and test in containers. Use compose overlays (`docker-compose.yml` + `docker-compose.override.yml`) to manage necessary differences (exposed ports, volume mounts, debug flags) rather than maintaining separate toolchains. Differences between environments are where bugs hide.
+- All markdown files use ASCII only (no emojis, no Unicode symbols).
+- Python logging module for output in scripts (no print statements).
+- Committed briefs follow `brief/writing-guide.md` exactly; the guide is the
+  contract between the writer and the site build.

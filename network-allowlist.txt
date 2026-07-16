@@ -1,0 +1,7 @@
+simonwillison.net
+openai.com
+www.interconnects.ai
+huggingface.co
+hnrss.org
+lobste.rs
+blog.pragmaticengineer.com

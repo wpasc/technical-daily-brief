@@ -1,51 +1,25 @@
-# Environment
-.env
-*.env.local
-
 # Python
 *.pyc
 __pycache__/
-.pytest_cache/
-*.egg-info/
-dist/
-build/
-.eggs/
-
-# Virtual environments
-venv/
 .venv/
-env/
+venv/
 
-# Database
-data/*.db
-backend/data/*.db
-*.sqlite3
+# Pipeline transient files
+brief/.context.md
 
-# Node
-node_modules/
-frontend/node_modules/
-
-# Build artifacts
-frontend/build/
-frontend/dist/
+# Site build output
+_site/
 
 # IDE
 .idea/
 .vscode/
 *.swp
-*.swo
 
 # OS
 .DS_Store
-Thumbs.db
 
 # Logs
 *.log
-logs/
-
-# Coverage
-.coverage
-htmlcov/
 
 # AI transient files (keep .ai/rules/ for config)
 .ai/checkpoints/
