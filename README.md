@@ -8,6 +8,14 @@ in [`briefs/`](briefs/) and render as a static site on GitHub Pages.
 This is the website spin on the "personal daily brief" idea: instead of a
 brief delivered *to* you, it is a small newspaper that publishes itself.
 
+> **Pivot in progress:** this repo is becoming the owner's private
+> **Learning Center** — a single-user Next.js app (brief + review queue +
+> library) with the brief pipeline below as one feature inside it. Domain
+> glossary in [CONTEXT.md](CONTEXT.md), decisions in [docs/adr/](docs/adr/),
+> deployment setup in
+> [docs/learning-center-setup.md](docs/learning-center-setup.md). The static
+> pipeline keeps running until the app serves the briefs.
+
 ## How it works
 
 ```
