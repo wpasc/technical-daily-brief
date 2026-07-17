@@ -24,3 +24,12 @@ _site/
 # AI transient files (keep .ai/rules/ for config)
 .ai/checkpoints/
 .ai/a2a/
+
+# Node / Next.js
+node_modules/
+.next/
+.vercel/
+.env
+.env.local
+.env*.local
+*.tsbuildinfo
